@@ -48,6 +48,13 @@ export function getGroceryRecommendations(
   const now = Date.now();
   const recommendations: GroceryRecommendation[] = [];
 
+  // Canonical food IDs currently on the active grocery list
+  const activeGroceryFoodIds = new Set(
+    groceryItems
+      .filter((g) => !g.checked && g.foodId)
+      .map((g) => g.foodId as string)
+  );
+
   // Names/normalized names currently on the active grocery list (to avoid duplicate recommendations)
   const activeGroceryNames = new Set(
     groceryItems
@@ -56,19 +63,44 @@ export function getGroceryRecommendations(
   );
 
   // Set of permanently disliked or hidden foods from user profile
-  const hiddenAndDislikedIds = new Set<string>([
-    ...(userProfile?.hiddenFoodIds || []),
-    ...(userProfile?.dislikedFoods || []),
-  ]);
+  const hiddenAndDislikedSet = new Set<string>();
+  [...(userProfile?.hiddenFoodIds || []), ...(userProfile?.dislikedFoods || [])].forEach((entry) => {
+    if (entry) {
+      hiddenAndDislikedSet.add(entry);
+      hiddenAndDislikedSet.add(entry.toLowerCase());
+      hiddenAndDislikedSet.add(normalizeFoodName(entry));
+    }
+  });
 
   // Session-dismissed items ("Not now")
-  const sessionDismissed = new Set<string>(dismissedFoodIds);
+  const sessionDismissed = new Set<string>();
+  dismissedFoodIds.forEach((id) => {
+    if (id) {
+      sessionDismissed.add(id);
+      sessionDismissed.add(normalizeFoodName(id));
+    }
+  });
 
   const isExcluded = (foodId: string, name: string): boolean => {
     const norm = normalizeFoodName(name);
+
+    // 1. On active grocery list by foodId or normalized name
+    if (foodId && activeGroceryFoodIds.has(foodId)) return true;
     if (activeGroceryNames.has(norm)) return true;
+
+    // 2. Session dismissed
     if (sessionDismissed.has(foodId) || sessionDismissed.has(norm)) return true;
-    if (hiddenAndDislikedIds.has(foodId) || hiddenAndDislikedIds.has(norm) || hiddenAndDislikedIds.has(name)) return true;
+
+    // 3. Permanently excluded or disliked in user profile
+    if (
+      (foodId && hiddenAndDislikedSet.has(foodId)) ||
+      (foodId && hiddenAndDislikedSet.has(foodId.toLowerCase())) ||
+      hiddenAndDislikedSet.has(norm) ||
+      hiddenAndDislikedSet.has(name.toLowerCase())
+    ) {
+      return true;
+    }
+
     return false;
   };
 
@@ -132,7 +164,7 @@ export function getGroceryRecommendations(
         level: 1,
         confidence: 'strong',
         score: 95,
-        explanation: `Pantry is almost out (only ${pItem.quantity} ${pItem.unit} left).`,
+        explanation: `You're running low (only ${pItem.quantity} ${pItem.unit} left).`,
         generatedAt: new Date().toISOString(),
       });
     }
@@ -185,8 +217,8 @@ export function getGroceryRecommendations(
         confidence: 'strong',
         score: 90,
         explanation: isPartial
-          ? `Need ${neededQty} ${recipeUnit} more for ${recipe.name} (${inPantry?.quantity} ${inPantry?.unit} in pantry).`
-          : `Required for ${recipe.name}.`,
+          ? `Needed for ${recipe.name} (${inPantry?.quantity} ${inPantry?.unit} in pantry, need ${neededQty} ${recipeUnit} more).`
+          : `Needed for ${recipe.name}.`,
         generatedAt: new Date().toISOString(),
       });
     });
