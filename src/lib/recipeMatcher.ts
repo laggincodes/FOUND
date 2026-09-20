@@ -1,6 +1,6 @@
 import { FoodItem, Recipe, PriorityAssessment, PriorityTier, FoodCategory } from '@/types';
 import { FOOD_LIBRARY_CATALOG } from '@/lib/food-library/food-catalog';
-import { matchFoodLibrary, normalizeFoodName } from '@/lib/food-library/normalizer';
+import { matchFoodLibrary, normalizeFoodName, extractFoodNameFromIngredient } from '@/lib/food-library/normalizer';
 import { normalizeUnit, convertQuantity, parseQuantityAndUnit } from '@/lib/unitConverter';
 
 export type RecipeMatchState = 'USE_FIRST' | 'COOK_NOW' | 'ALMOST_THERE' | 'NEEDS_INGREDIENTS';
@@ -52,7 +52,10 @@ export function evaluateRecipe(
   getItemAssessment: (item: FoodItem) => PriorityAssessment
 ): EvaluatedRecipe {
   const evaluatedIngredients: EvaluatedIngredient[] = recipe.ingredients.map((ing) => {
-    const matchedLib = matchFoodLibrary(ing.name, FOOD_LIBRARY_CATALOG);
+    const targetExtracted = extractFoodNameFromIngredient(ing.name);
+    const matchedLib =
+      matchFoodLibrary(ing.name, FOOD_LIBRARY_CATALOG) ||
+      matchFoodLibrary(targetExtracted, FOOD_LIBRARY_CATALOG);
     const targetFoodId = matchedLib?.id;
     const targetNorm = normalizeFoodName(ing.name);
 
@@ -60,12 +63,53 @@ export function evaluateRecipe(
     const reqQty = parsedReq.quantity > 0 ? parsedReq.quantity : 1;
     const reqUnit = parsedReq.unit || 'pcs';
 
-    // Match in pantry: exact foodId, exact normalized name, or substring match
+    // Match in pantry using canonical IDs, extracted food names, and aliases
     const matchingLots = pantryItems.filter((item) => {
       if (item.quantity <= 0) return false;
-      if (targetFoodId && item.foodId && item.foodId === targetFoodId) return true;
-      if (normalizeFoodName(item.name) === targetNorm) return true;
+
+      // 1. Canonical Food ID match
+      const pantryItemFoodId =
+        item.foodId || matchFoodLibrary(item.name, FOOD_LIBRARY_CATALOG)?.id;
+      if (targetFoodId && pantryItemFoodId && targetFoodId === pantryItemFoodId) {
+        return true;
+      }
+
+      // 2. Extracted food name exact match (e.g. "Paneer, cubed" -> "paneer", "Fresh Paneer" -> "paneer")
+      const itemExtracted = extractFoodNameFromIngredient(item.name);
+      if (itemExtracted && targetExtracted && itemExtracted === targetExtracted) {
+        return true;
+      }
+
+      // 3. Normalized name direct match
       const itemNorm = normalizeFoodName(item.name);
+      if (
+        itemNorm === targetNorm ||
+        itemNorm === targetExtracted ||
+        itemExtracted === targetNorm
+      ) {
+        return true;
+      }
+
+      // 4. Catalog alias match
+      if (
+        matchedLib?.aliases.some((alias) => {
+          const normA = normalizeFoodName(alias);
+          return normA === itemNorm || normA === itemExtracted;
+        })
+      ) {
+        return true;
+      }
+
+      // 5. Distinct whole-word containment (e.g. "paneer cheese" contains "paneer")
+      if (targetExtracted.length > 2) {
+        const regTarget = new RegExp(`\\b${targetExtracted}\\b`, 'i');
+        if (regTarget.test(item.name)) return true;
+      }
+      if (itemExtracted.length > 2) {
+        const regItem = new RegExp(`\\b${itemExtracted}\\b`, 'i');
+        if (regItem.test(ing.name)) return true;
+      }
+
       return (
         itemNorm.includes(targetNorm) ||
         targetNorm.includes(itemNorm) ||
@@ -147,26 +191,47 @@ export function evaluateRecipe(
     .map((i) => i.name);
 
   // Determine state according to prompt specifications:
-  // USE FIRST: Recipe uses one or more pantry items currently marked EXPIRED, USE_FIRST, or USE_SOON
-  // COOK NOW: All required ingredients available
-  // ALMOST THERE: Most ingredients available and only 1-2 missing
-  // NEEDS INGREDIENTS: Several ingredients missing
+  // USE FIRST: Recipe uses one or more pantry items currently marked EXPIRED, USE_FIRST, or USE_SOON (with useful match)
+  // COOK NOW: All required ingredients available (100% match)
+  // ALMOST THERE: Substantial pantry overlap (e.g. >= 40% match with 2+ available, or <= 2 missing items)
+  // NEEDS INGREDIENTS: Weak or zero pantry overlap (shown as EXPLORE)
   let state: RecipeMatchState;
   let summaryText = '';
 
-  if (priorityRescueCount > 0) {
+  if (priorityRescueCount > 0 && availableCount > 0) {
     state = 'USE_FIRST';
     const rescued = priorityRescueNames[0];
     summaryText = `Uses ${rescued}${priorityRescueCount > 1 ? ` +${priorityRescueCount - 1} priority items` : ''} that needs attention`;
   } else if (missingCount === 0 && totalCount > 0) {
     state = 'COOK_NOW';
     summaryText = 'All required ingredients available in your pantry';
-  } else if (missingCount <= 2 && availableCount >= 1) {
+  } else if (
+    availableCount >= 1 &&
+    (
+      missingCount <= 2 ||
+      (availableCount >= 2 && missingCount <= 3) ||
+      matchRatio >= 0.4
+    )
+  ) {
     state = 'ALMOST_THERE';
     summaryText = `Missing: ${missingIngredientsList.slice(0, 2).join(', ')}`;
   } else {
     state = 'NEEDS_INGREDIENTS';
     summaryText = `${missingCount} ingredient${missingCount === 1 ? '' : 's'} missing`;
+  }
+
+  // Development-only structured debug logging (Step 1)
+  if (process.env.NODE_ENV !== 'production') {
+    const matchedNames = evaluatedIngredients.filter((i) => i.isAvailable).map((i) => i.pantryItemName || i.name);
+    const missingNames = evaluatedIngredients.filter((i) => !i.isAvailable).map((i) => i.name);
+    console.log(`[Recipe Matcher]`);
+    console.log(`PANTRY ITEMS:`, JSON.stringify(pantryItems.map((p) => p.name)));
+    console.log(`RECIPE: "${recipe.name}"`);
+    console.log(`RECIPE INGREDIENTS:`, JSON.stringify(recipe.ingredients.map((i) => i.name)));
+    console.log(`MATCHED:`, JSON.stringify(matchedNames));
+    console.log(`MISSING:`, JSON.stringify(missingNames));
+    console.log(`MATCH: ${availableCount}/${totalCount} (${Math.round(matchRatio * 100)}%)`);
+    console.log(`CLASS: ${state}`);
   }
 
   const stateBadges: Record<RecipeMatchState, { label: string; bg: string; text: string; border: string }> = {

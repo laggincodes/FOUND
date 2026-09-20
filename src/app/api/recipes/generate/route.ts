@@ -37,6 +37,15 @@ function slugify(name: string): string {
     .trim();
 }
 
+import { extractFoodNameFromIngredient } from '@/lib/food-library/normalizer';
+
+const CANDIDATE_MODELS = [
+  'gemini-flash-lite-latest',
+  'gemini-3.5-flash-lite',
+  'gemini-flash-latest',
+  'gemini-2.5-flash',
+];
+
 export async function POST(request: Request) {
   try {
     const body = await request.json().catch(() => ({}));
@@ -56,35 +65,39 @@ export async function POST(request: Request) {
     }
 
     // Build concise pantry summary for Gemini
-    const pantrySummary = pantryItems.length > 0
-      ? pantryItems
-          .map((i) => {
-            const urgency = i.priority && i.priority !== 'SAFE_FOR_NOW' ? ` [Priority: ${i.priority}]` : '';
-            const qty = i.quantity ? ` (${i.quantity} ${i.unit || 'unit'})` : '';
-            return `${i.name}${qty}${urgency}`;
-          })
-          .join(', ')
-      : 'No ingredients currently in pantry; suggest everyday versatile student staples.';
+    const pantrySummary =
+      pantryItems.length > 0
+        ? pantryItems
+            .map((i) => {
+              const urgency =
+                i.priority && i.priority !== 'SAFE_FOR_NOW' ? ` [Priority: ${i.priority}]` : '';
+              const qty = i.quantity ? ` (${i.quantity} ${i.unit || 'unit'})` : '';
+              return `${i.name}${qty}${urgency}`;
+            })
+            .join(', ')
+        : 'No ingredients currently in pantry; suggest everyday versatile student staples.';
 
-    const prompt = `You are the recipe assistant for FOUND.
+    const prompt = `You are the recipe engine for FOUND.
 
-The user wants recipes they can make using the food they already have.
+Generate 8 to 12 distinct recipes based primarily on the ingredients provided by the user.
 
-Prefer recipes that use the provided ingredients.
-Prefer simple, affordable, student-friendly meals.
-Prefer Indian/vegetarian recipes when appropriate.
-Do not claim an ingredient is available.
-Do not invent pantry quantities.
-Return 8 to 12 structured recipes matching the provided schema.
+The user's pantry ingredients are:
+${pantrySummary}
 
-Pantry ingredients:
-${pantrySummary}`;
+Prefer recipes that use multiple pantry ingredients.
+Include:
+1. Recipes that use ONLY the provided pantry ingredients (easy to cook right now).
+2. Recipes that use the pantry ingredients plus 1 or 2 common kitchen staples (onion, garlic, oil, spices).
+3. Recipes with creative variations.
 
-    // Call Gemini 1.5 Flash REST API with JSON structured output
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+Return recipes using simple ingredient names such as:
+paneer, tomato, onion, potato, rice, milk, spinach.
 
-    const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+Do not put quantities inside the ingredient name.
+
+Return structured JSON containing 8 to 12 recipes matching the provided schema.
+
+Do not claim that missing ingredients are available.`;
 
     const geminiPayload = {
       contents: [
@@ -97,76 +110,96 @@ ${pantrySummary}`;
         responseMimeType: 'application/json',
         temperature: 0.3,
         responseSchema: {
-          type: 'ARRAY',
-          items: {
-            type: 'OBJECT',
-            properties: {
-              name: { type: 'STRING' },
-              description: { type: 'STRING' },
-              ingredients: {
-                type: 'ARRAY',
-                items: {
-                  type: 'OBJECT',
-                  properties: {
-                    name: { type: 'STRING' },
-                    quantity: { type: 'STRING' },
-                    unit: { type: 'STRING' },
+          type: 'OBJECT',
+          properties: {
+            recipes: {
+              type: 'ARRAY',
+              items: {
+                type: 'OBJECT',
+                properties: {
+                  name: { type: 'STRING' },
+                  description: { type: 'STRING' },
+                  ingredients: {
+                    type: 'ARRAY',
+                    items: {
+                      type: 'OBJECT',
+                      properties: {
+                        name: { type: 'STRING' },
+                        quantity: { type: 'STRING' },
+                        unit: { type: 'STRING' },
+                      },
+                      required: ['name'],
+                    },
                   },
-                  required: ['name'],
+                  steps: {
+                    type: 'ARRAY',
+                    items: { type: 'STRING' },
+                  },
+                  cookingTimeMinutes: { type: 'INTEGER' },
+                  servings: { type: 'INTEGER' },
+                  vegetarian: { type: 'BOOLEAN' },
                 },
+                required: ['name', 'description', 'ingredients', 'steps', 'cookingTimeMinutes'],
               },
-              steps: {
-                type: 'ARRAY',
-                items: { type: 'STRING' },
-              },
-              cookingTimeMinutes: { type: 'INTEGER' },
-              servings: { type: 'INTEGER' },
-              vegetarian: { type: 'BOOLEAN' },
             },
-            required: ['name', 'description', 'ingredients', 'steps', 'cookingTimeMinutes'],
           },
+          required: ['recipes'],
         },
       },
     };
 
-    let response: Response;
-    try {
-      response = await fetch(geminiUrl, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(geminiPayload),
-        signal: controller.signal,
-      });
-    } finally {
-      clearTimeout(timeoutId);
-    }
+    let rawText: string | null = null;
+    let selectedModel = '';
 
-    if (!response.ok) {
-      console.warn(`[Gemini API] Request failed with HTTP status ${response.status}`);
-      return NextResponse.json({
-        success: true,
-        source: 'fallback',
-        message: 'Gemini service returned an error. Displaying curated recipes.',
-        recipes: RECIPES_DATA,
-      });
-    }
+    // Iterate through candidate models for resilient generation
+    for (const model of CANDIDATE_MODELS) {
+      const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 12000);
 
-    const data = await response.json();
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+        const res = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(geminiPayload),
+          signal: controller.signal,
+        });
+        clearTimeout(timeoutId);
+
+        if (res.ok) {
+          const data = await res.json();
+          const text = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+          if (text && text.trim().length > 0) {
+            rawText = text;
+            selectedModel = model;
+            break;
+          }
+        } else {
+          console.warn(`[Gemini API] Model ${model} returned HTTP ${res.status}`);
+        }
+      } catch (err: any) {
+        console.warn(`[Gemini API] Error contacting model ${model}:`, err?.message);
+      }
+    }
 
     if (!rawText) {
-      console.warn('[Gemini API] No content received from Gemini model.');
+      console.warn('[Gemini API] No content received from any candidate model. Using curated recipes.');
       return NextResponse.json({
         success: true,
         source: 'fallback',
-        message: 'No recipe output generated. Displaying curated recipes.',
+        message: 'Could not connect to Gemini service. Displaying curated recipes.',
         recipes: RECIPES_DATA,
       });
     }
 
-    let parsedList: any[];
+    let parsedList: any[] = [];
     try {
-      parsedList = JSON.parse(rawText);
+      const parsed = JSON.parse(rawText);
+      if (Array.isArray(parsed)) {
+        parsedList = parsed;
+      } else if (Array.isArray(parsed?.recipes)) {
+        parsedList = parsed.recipes;
+      }
     } catch {
       console.warn('[Gemini API] Failed to parse JSON response from Gemini.');
       return NextResponse.json({
@@ -191,32 +224,39 @@ ${pantrySummary}`;
       .map((item, index) => {
         const cleanName = item.name.trim();
         const slug = `${slugify(cleanName)}-${index + 1}`;
-        const timeMinutes = typeof item.cookingTimeMinutes === 'number' && item.cookingTimeMinutes > 0
-          ? Math.min(120, item.cookingTimeMinutes)
-          : 20;
+        const timeMinutes =
+          typeof item.cookingTimeMinutes === 'number' && item.cookingTimeMinutes > 0
+            ? Math.min(120, item.cookingTimeMinutes)
+            : 20;
 
         const isVegetarian = typeof item.vegetarian === 'boolean' ? item.vegetarian : true;
 
         const ingredients = item.ingredients.map((ing: any) => {
-          const ingName = typeof ing.name === 'string' ? ing.name.trim() : 'Ingredient';
+          const rawIngName = typeof ing.name === 'string' ? ing.name.trim() : 'Ingredient';
+          // Clean out inadvertent quantities or prep words
+          const cleanIngName = extractFoodNameFromIngredient(rawIngName) || rawIngName;
           const qty = ing.quantity ? String(ing.quantity).trim() : '';
           const unit = ing.unit ? String(ing.unit).trim() : '';
-          const amount = [qty, unit].filter(Boolean).join(' ') || '1 serving';
+          const amount = [qty, unit].filter(Boolean).join(' ') || '1 unit';
           return {
-            name: ingName,
+            name: cleanIngName,
             amount: amount,
           };
         });
 
-        const steps = Array.isArray(item.steps) && item.steps.length > 0
-          ? item.steps.map((s: any) => String(s).trim()).filter(Boolean)
-          : ['Combine prepared ingredients in a pan.', 'Cook over medium heat until tender.', 'Serve hot.'];
+        const steps =
+          Array.isArray(item.steps) && item.steps.length > 0
+            ? item.steps.map((s: any) => String(s).trim()).filter(Boolean)
+            : ['Combine prepared ingredients in a pan.', 'Cook over medium heat until tender.', 'Serve hot.'];
 
         return {
           id: `gemini-${slug}`,
           slug: slug,
           name: cleanName,
-          description: typeof item.description === 'string' ? item.description.trim() : `Nutritious, easy homecooked ${cleanName}.`,
+          description:
+            typeof item.description === 'string'
+              ? item.description.trim()
+              : `Nutritious, easy homecooked ${cleanName}.`,
           image: pickRecipeImage(cleanName, item.description || ''),
           timeMinutes: timeMinutes,
           difficulty: timeMinutes <= 20 ? 'Easy' : timeMinutes <= 35 ? 'Medium' : 'Intermediate',
@@ -244,11 +284,11 @@ ${pantrySummary}`;
     return NextResponse.json({
       success: true,
       source: 'gemini',
+      model: selectedModel,
       count: validatedRecipes.length,
       recipes: validatedRecipes,
     });
   } catch (err: any) {
-    // Graceful error recovery: never leak internal errors or API keys
     console.warn('[Gemini API] Unexpected exception in recipe generation:', err?.message || 'Unknown error');
     return NextResponse.json({
       success: true,
@@ -258,3 +298,4 @@ ${pantrySummary}`;
     });
   }
 }
+
