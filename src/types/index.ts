@@ -226,3 +226,56 @@ export type FoodLibraryItem = {
   source?: string;
   sourceId?: string;
 };
+
+/* =========================================================================
+   FOUND: DURABLE INVENTORY & UNIFIED "BEFORE YOU BUY" TYPES
+   ========================================================================= */
+
+export type DurableCategory =
+  | 'Stationery'
+  | 'Electronics'
+  | 'Books'
+  | 'Clothing'
+  | 'Toiletries'
+  | 'Household'
+  | 'Other';
+
+export interface DurableItem {
+  id: string;
+  userId?: string;
+  name: string;
+  category: DurableCategory;
+  quantity: number;
+  unit?: string;
+  location?: string;
+  purchaseDate?: string; // YYYY-MM-DD
+  purchasePrice?: number; // In currency units (e.g. INR)
+  notes?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export type InventoryDecision = 'BUY' | 'USE' | 'WAIT';
+
+export interface SearchMatchResult {
+  query: string;
+  found: boolean;
+  type?: 'food' | 'durable' | 'both' | 'none';
+  name?: string;
+  category?: string;
+  totalQuantity: number;
+  unit: string;
+  decision: InventoryDecision;
+  decisionReason: string;
+  headline: string; // e.g. "You already have 4 notebooks." or "You already have 2L."
+  subline?: string; // e.g. "2 are currently unused." or "1L should be used soon."
+  foodItems: FoodItem[];
+  durableItems: DurableItem[];
+  purchaseMemory?: {
+    lastPurchasedAt?: string;
+    lastQuantity?: number;
+    lastPrice?: number;
+    purchaseCount?: number;
+  };
+  isBoughtAhead?: boolean;
+}

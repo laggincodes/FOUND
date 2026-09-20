@@ -149,8 +149,9 @@ export default function GroceryListPage() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      <Breadcrumbs items={[{ label: 'Grocery List' }]} />
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
+        <Breadcrumbs items={[{ label: 'Grocery List' }]} />
 
       {/* Header */}
       <div className="mt-4 mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[#E3E2E6]">
@@ -522,31 +523,46 @@ export default function GroceryListPage() {
                 key={item.id}
                 className="p-4 sm:p-5 hover:bg-[#FAF9FC] transition-colors flex items-start sm:items-center justify-between gap-3 group"
               >
-                <div className="flex items-start sm:items-center gap-3.5 flex-1 min-w-0">
-                  {/* Custom Checkbox */}
+                <div className="flex items-center gap-3.5 flex-1 min-w-0">
+                  {/* Thumb-friendly Checkbox */}
                   <button
                     type="button"
                     onClick={() => handleToggle(item.id)}
-                    className="w-5 h-5 rounded-xs border-2 border-[#C2C8C0] hover:border-primary flex items-center justify-center transition-colors shrink-0 mt-0.5 sm:mt-0 cursor-pointer focus-visible:ring-2 focus-visible:ring-primary"
+                    className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
+                      item.checked
+                        ? 'bg-primary border-primary text-white'
+                        : 'border-[#D5D9D4] hover:border-primary bg-white'
+                    }`}
                     aria-label={`Mark ${item.name} as purchased`}
                   >
-                    {item.checked && <Check className="w-3.5 h-3.5 text-primary stroke-[3]" />}
+                    {item.checked && <Check className="w-4 h-4 stroke-[3]" />}
                   </button>
 
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-semibold text-base text-[#1A1C1E]">{item.name}</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-xs bg-surface-container text-[#1A1C1E]">
+                      <span className="font-bold text-sm sm:text-base text-[#191C1B]">{item.name}</span>
+                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F2F4F1] text-[#2A2F2D]">
                         {item.quantity} {item.unit}
                       </span>
-                      {item.category && (
-                        <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded-xs bg-[#FAF9FC] border border-[#E3E2E6] text-outline">
-                          {item.category}
-                        </span>
-                      )}
+                      {/* Priority Tag */}
+                      <span
+                        className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                          item.source === 'recipe' || (item.recipeName && item.recipeName.length > 0)
+                            ? 'bg-[#FFDBD0] text-[#97472E]'
+                            : item.source === 'pantry_restock'
+                            ? 'bg-[#FEF3C7] text-[#92400E]'
+                            : 'bg-[#E3F2E9] text-primary'
+                        }`}
+                      >
+                        {item.source === 'recipe' || (item.recipeName && item.recipeName.length > 0)
+                          ? 'HIGH'
+                          : item.source === 'pantry_restock'
+                          ? 'MEDIUM'
+                          : 'LOW'}
+                      </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 mt-1 text-xs text-on-surface-variant">
+                    <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-[#5F6762]">
                       {item.source === 'recipe' && item.recipeName && (
                         <span className="inline-flex items-center gap-1 text-primary font-medium">
                           <Sparkles className="w-3 h-3" />
@@ -554,13 +570,13 @@ export default function GroceryListPage() {
                         </span>
                       )}
                       {item.source === 'pantry_restock' && (
-                        <span className="inline-flex items-center gap-1 text-[#4A6B53] font-medium">
+                        <span className="inline-flex items-center gap-1 text-primary font-medium">
                           <Package className="w-3 h-3" />
                           <span>Restock staple</span>
                         </span>
                       )}
                       {item.notes && item.source === 'manual' && (
-                        <span className="text-outline italic">{item.notes}</span>
+                        <span className="text-[#8A928D] italic">{item.notes}</span>
                       )}
                     </div>
                   </div>
@@ -801,6 +817,7 @@ export default function GroceryListPage() {
           </div>
         </div>
       </Modal>
+      </main>
     </div>
   );
 }

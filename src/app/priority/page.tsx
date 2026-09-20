@@ -38,9 +38,9 @@ export default function PriorityPage() {
     .sort((a, b) => getItemAssessment(b).score - getItemAssessment(a).score);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Breadcrumbs */}
-      <Breadcrumbs items={[{ label: 'Use First' }]} />
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
+        <Breadcrumbs items={[{ label: 'Use First' }]} />
 
       {/* Main Header */}
       <div className="mt-3 mb-8">
@@ -246,6 +246,7 @@ export default function PriorityPage() {
           </div>
         </div>
       </section>
+      </main>
     </div>
   );
 }

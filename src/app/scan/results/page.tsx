@@ -264,7 +264,7 @@ export default function ScanResultsPage() {
                       type="text"
                       value={item.name}
                       onChange={(e) => handleUpdateItem(item.id, { name: e.target.value })}
-                      className="font-serif font-bold text-base text-ink bg-transparent border-b border-transparent hover:border-earth-300 focus:border-[#C84B31] focus:outline-hidden w-full py-0.5"
+                      className="font-serif font-bold text-base text-ink bg-transparent border-b border-transparent hover:border-earth-300 focus:border-[#C84B31] focus:outline-none w-full py-0.5"
                       aria-label="Food Name"
                     />
                     <div className="flex items-center gap-2 text-xs text-ink-muted mt-0.5">
@@ -275,7 +275,7 @@ export default function ScanResultsPage() {
                         onChange={(e) =>
                           handleUpdateItem(item.id, { category: e.target.value as FoodCategory })
                         }
-                        className="bg-transparent text-xs text-ink-muted border-none p-0 focus:outline-hidden cursor-pointer"
+                        className="bg-transparent text-xs text-ink-muted border-none p-0 focus:outline-none cursor-pointer"
                       >
                         <option value="Produce">Produce</option>
                         <option value="Dairy & Eggs">Dairy & Eggs</option>
@@ -321,7 +321,7 @@ export default function ScanResultsPage() {
                       type="date"
                       value={item.bestBefore || ''}
                       onChange={(e) => handleUpdateItem(item.id, { bestBefore: e.target.value })}
-                      className="bg-transparent text-xs text-ink focus:outline-hidden"
+                      className="bg-transparent text-xs text-ink focus:outline-none"
                       aria-label="Best Before Date"
                     />
                   </div>

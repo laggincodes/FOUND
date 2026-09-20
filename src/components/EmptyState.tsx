@@ -11,6 +11,7 @@ interface EmptyStateProps {
   onActionClick?: () => void;
   secondaryActionText?: string;
   secondaryActionHref?: string;
+  onSecondaryActionClick?: () => void;
 }
 
 export const EmptyState: React.FC<EmptyStateProps> = ({
@@ -22,7 +23,10 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   onActionClick,
   secondaryActionText,
   secondaryActionHref,
+  onSecondaryActionClick,
 }) => {
+  const handleSecondaryClick = onSecondaryActionClick || (actionHref ? onActionClick : undefined);
+
   return (
     <div className="bg-white rounded-2xl p-8 sm:p-12 text-center border border-surface-border max-w-md mx-auto my-8 editorial-shadow">
       <div className="w-12 h-12 rounded-2xl bg-earth-100 text-[#C84B31] flex items-center justify-center mx-auto mb-4">
@@ -45,7 +49,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           <button
             type="button"
             onClick={onActionClick}
-            className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-[#C84B31] hover:bg-[#b03e26] text-white text-sm font-semibold rounded-xl shadow-xs transition-colors min-h-[44px]"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-[#C84B31] hover:bg-[#b03e26] text-white text-sm font-semibold rounded-xl shadow-xs transition-colors min-h-[44px] cursor-pointer"
           >
             {actionText}
           </button>
@@ -58,6 +62,16 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
           >
             {secondaryActionText}
           </Link>
+        )}
+
+        {!secondaryActionHref && secondaryActionText && handleSecondaryClick && (
+          <button
+            type="button"
+            onClick={handleSecondaryClick}
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-earth-100 hover:bg-earth-200 text-ink text-sm font-medium rounded-xl transition-colors min-h-[44px] cursor-pointer"
+          >
+            {secondaryActionText}
+          </button>
         )}
       </div>
     </div>

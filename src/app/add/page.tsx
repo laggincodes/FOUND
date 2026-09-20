@@ -7,9 +7,9 @@ import { Camera, Edit3, ArrowRight, Sparkles, CheckCircle2, ShieldAlert } from '
 
 export default function AddFoodPage() {
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Breadcrumbs */}
-      <Breadcrumbs items={[{ label: 'Add Food' }]} />
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
+        <Breadcrumbs items={[{ label: 'Add Food' }]} />
 
       {/* Header */}
       <div className="text-center max-w-2xl mx-auto mt-4 mb-10">
@@ -113,6 +113,7 @@ export default function AddFoodPage() {
           </div>
         </Link>
       </div>
+      </main>
     </div>
   );
 }

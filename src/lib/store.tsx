@@ -15,6 +15,9 @@ import {
   FoodCategory,
   StorageLocation,
   DuplicateResolutionData,
+  DurableItem,
+  DurableCategory,
+  SearchMatchResult,
 } from '@/types';
 import { assessPriority } from './priority';
 import { RECIPES_DATA } from './recipes-data';
@@ -25,6 +28,7 @@ import {
   getGroceryRecommendations,
   recordPurchaseAndRecalculateStats,
 } from './recommendationEngine';
+import { checkItemInventoryPure } from './inventory-checker';
 
 interface PantryContextType {
   // User Identity & Multi-User Isolation
@@ -35,12 +39,17 @@ interface PantryContextType {
 
   // Inventory & Groceries
   items: FoodItem[];
+  durableItems: DurableItem[];
   groceryItems: GroceryItem[];
   usageEvents: UsageEvent[];
   impactMetrics: ImpactMetrics;
   addItem: (item: Omit<FoodItem, 'id' | 'createdAt' | 'updatedAt'>) => FoodItem;
   updateItem: (id: string, updates: Partial<Omit<FoodItem, 'id' | 'createdAt'>>) => void;
   deleteItem: (id: string) => void;
+  addDurableItem: (item: Omit<DurableItem, 'id' | 'createdAt' | 'updatedAt'>) => DurableItem;
+  updateDurableItem: (id: string, updates: Partial<Omit<DurableItem, 'id' | 'createdAt'>>) => void;
+  deleteDurableItem: (id: string) => void;
+  checkItemInventory: (query: string) => SearchMatchResult;
   markIngredientsUsed: (
     usedItems: { name: string; amountUsed: number; unit: string; recipeId?: string; recipeName?: string; foodId?: string }[]
   ) => { rescuedCount: number; rescuedValue: number; rescuedWeightKg: number };
@@ -178,16 +187,46 @@ const USER_001_INITIAL_ITEMS: FoodItem[] = [
     foodId: 'food-milk-cow',
     name: 'Whole Milk',
     category: 'Dairy & Eggs',
-    quantity: 0.2, // Low quantity (Section 31: 0.2 L)
+    quantity: 1,
     unit: 'L',
-    bestBefore: getDateStr(1),
+    bestBefore: getDateStr(1), // Tomorrow -> Priority USE FIRST
     opened: true,
-    openedDate: getDateStr(-3),
+    openedDate: getDateStr(-2),
     purchaseDate: getDateStr(-7), // Bought 7 days ago
     storageLocation: 'Fridge',
-    notes: 'Almost finished carton.',
+    notes: 'Opened carton, best before tomorrow.',
     createdAt: getIsoTimeStr(-7),
     updatedAt: getIsoTimeStr(-1),
+  },
+  {
+    id: 'item-u1-milk-backup',
+    foodId: 'food-milk-cow',
+    name: 'Whole Milk (Backup)',
+    category: 'Dairy & Eggs',
+    quantity: 1,
+    unit: 'L',
+    bestBefore: getDateStr(6),
+    opened: false,
+    purchaseDate: getDateStr(-7),
+    storageLocation: 'Fridge',
+    notes: 'Unopened backup carton.',
+    createdAt: getIsoTimeStr(-7),
+    updatedAt: getIsoTimeStr(-7),
+  },
+  {
+    id: 'item-u1-toothpaste',
+    foodId: 'item-toothpaste',
+    name: 'Herbal Toothpaste',
+    category: 'Other',
+    quantity: 3,
+    unit: 'pcs',
+    opened: true,
+    openedDate: getDateStr(-12),
+    purchaseDate: getDateStr(-12),
+    storageLocation: 'Cupboard / Pantry',
+    notes: '1 opened in bathroom, 2 extra stored in linen cabinet',
+    createdAt: getIsoTimeStr(-12),
+    updatedAt: getIsoTimeStr(-12),
   },
   {
     id: 'item-u1-paneer',
@@ -284,7 +323,84 @@ const USER_001_INITIAL_GROCERIES: GroceryItem[] = [
   },
 ];
 
+const USER_001_INITIAL_DURABLES: DurableItem[] = [
+  {
+    id: 'dur-u1-notebooks',
+    name: 'Ruled Notebooks',
+    category: 'Stationery',
+    quantity: 4,
+    unit: 'pcs',
+    purchaseDate: getDateStr(-14),
+    purchasePrice: 160,
+    notes: '2 currently in use on desk, 2 unused in drawer',
+    createdAt: getIsoTimeStr(-14),
+    updatedAt: getIsoTimeStr(-14),
+  },
+  {
+    id: 'dur-u1-pens',
+    name: 'Gel Pens (Blue/Black Pack)',
+    category: 'Stationery',
+    quantity: 6,
+    unit: 'pcs',
+    purchaseDate: getDateStr(-25),
+    purchasePrice: 120,
+    notes: 'Pack in study drawer',
+    createdAt: getIsoTimeStr(-25),
+    updatedAt: getIsoTimeStr(-25),
+  },
+  {
+    id: 'dur-u1-cable',
+    name: 'USB-C Braided Cable',
+    category: 'Electronics',
+    quantity: 2,
+    unit: 'pcs',
+    purchaseDate: getDateStr(-60),
+    purchasePrice: 350,
+    notes: '1 by bedside, 1 spare in tech pouch',
+    createdAt: getIsoTimeStr(-60),
+    updatedAt: getIsoTimeStr(-60),
+  },
+  {
+    id: 'dur-u1-charger',
+    name: '65W Fast Wall Charger',
+    category: 'Electronics',
+    quantity: 1,
+    unit: 'pcs',
+    purchaseDate: getDateStr(-90),
+    purchasePrice: 1499,
+    notes: 'Main work desk adapter',
+    createdAt: getIsoTimeStr(-90),
+    updatedAt: getIsoTimeStr(-90),
+  },
+];
+
 const USER_001_PURCHASE_HISTORY: PurchaseHistoryItem[] = [
+  // Toothpaste (Bought 12 days ago)
+  {
+    id: 'ph-toothpaste-1',
+    userId: 'demo-user-001',
+    foodId: 'item-toothpaste',
+    name: 'Herbal Toothpaste',
+    quantity: 3,
+    unit: 'pcs',
+    category: 'Toiletries',
+    purchasedAt: getIsoTimeStr(-12),
+    estimatedPrice: 180,
+    source: 'manual',
+  },
+  // Notebooks (Bought 14 days ago)
+  {
+    id: 'ph-notebook-1',
+    userId: 'demo-user-001',
+    foodId: 'dur-notebook',
+    name: 'Ruled Notebooks',
+    quantity: 4,
+    unit: 'pcs',
+    category: 'Stationery',
+    purchasedAt: getIsoTimeStr(-14),
+    estimatedPrice: 160,
+    source: 'manual',
+  },
   // Milk purchases (every ~7 days)
   {
     id: 'ph-milk-1',
@@ -295,6 +411,7 @@ const USER_001_PURCHASE_HISTORY: PurchaseHistoryItem[] = [
     unit: 'L',
     category: 'Dairy & Eggs',
     purchasedAt: getIsoTimeStr(-21),
+    estimatedPrice: 65,
     source: 'grocery-list',
   },
   {
@@ -306,6 +423,7 @@ const USER_001_PURCHASE_HISTORY: PurchaseHistoryItem[] = [
     unit: 'L',
     category: 'Dairy & Eggs',
     purchasedAt: getIsoTimeStr(-14),
+    estimatedPrice: 65,
     source: 'grocery-list',
   },
   {
@@ -608,6 +726,33 @@ const USER_002_INITIAL_GROCERIES: GroceryItem[] = [
   },
 ];
 
+const USER_002_INITIAL_DURABLES: DurableItem[] = [
+  {
+    id: 'dur-u2-sketchbook',
+    name: 'A4 Spiral Sketchbook',
+    category: 'Stationery',
+    quantity: 2,
+    unit: 'pcs',
+    purchaseDate: getDateStr(-10),
+    purchasePrice: 280,
+    notes: '1 active on desk, 1 backup in studio rack',
+    createdAt: getIsoTimeStr(-10),
+    updatedAt: getIsoTimeStr(-10),
+  },
+  {
+    id: 'dur-u2-fineliners',
+    name: 'Micro Fineliner Pens',
+    category: 'Stationery',
+    quantity: 5,
+    unit: 'pcs',
+    purchaseDate: getDateStr(-18),
+    purchasePrice: 450,
+    notes: 'Drawing set',
+    createdAt: getIsoTimeStr(-18),
+    updatedAt: getIsoTimeStr(-18),
+  },
+];
+
 const USER_002_PURCHASE_HISTORY: PurchaseHistoryItem[] = [
   {
     id: 'ph-u2-eggs-1',
@@ -653,6 +798,7 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   // Household data states (scoped to active user)
   const [items, setItems] = useState<FoodItem[]>([]);
+  const [durableItems, setDurableItems] = useState<DurableItem[]>([]);
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>([]);
   const [usageEvents, setUsageEvents] = useState<UsageEvent[]>([]);
   const [purchaseHistory, setPurchaseHistory] = useState<PurchaseHistoryItem[]>([]);
@@ -690,6 +836,16 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         const initial = userId === 'demo-user-001' ? USER_001_INITIAL_ITEMS : USER_002_INITIAL_ITEMS;
         setItems(initial);
         localStorage.setItem(`use_it_first_${userId}_items`, JSON.stringify(initial));
+      }
+
+      // Durable Items
+      const storedDurables = localStorage.getItem(`use_it_first_${userId}_durables`);
+      if (storedDurables) {
+        setDurableItems(JSON.parse(storedDurables));
+      } else {
+        const initial = userId === 'demo-user-001' ? USER_001_INITIAL_DURABLES : USER_002_INITIAL_DURABLES;
+        setDurableItems(initial);
+        localStorage.setItem(`use_it_first_${userId}_durables`, JSON.stringify(initial));
       }
 
       // Groceries
@@ -779,6 +935,44 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     setPurchaseStats(newStats);
     localStorage.setItem(getKey('stats'), JSON.stringify(newStats));
   };
+
+  const saveDurableItems = (newDurables: DurableItem[]) => {
+    setDurableItems(newDurables);
+    localStorage.setItem(getKey('durables'), JSON.stringify(newDurables));
+  };
+
+  const addDurableItem = (itemData: Omit<DurableItem, 'id' | 'createdAt' | 'updatedAt'>): DurableItem => {
+    const now = new Date().toISOString();
+    const newItem: DurableItem = {
+      ...itemData,
+      id: `dur-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
+      createdAt: now,
+      updatedAt: now,
+    };
+    const updated = [newItem, ...durableItems];
+    saveDurableItems(updated);
+    return newItem;
+  };
+
+  const updateDurableItem = (id: string, updates: Partial<Omit<DurableItem, 'id' | 'createdAt'>>) => {
+    const updated = durableItems.map((item) =>
+      item.id === id ? { ...item, ...updates, updatedAt: new Date().toISOString() } : item
+    );
+    saveDurableItems(updated);
+  };
+
+  const deleteDurableItem = (id: string) => {
+    const filtered = durableItems.filter((i) => i.id !== id);
+    saveDurableItems(filtered);
+  };
+
+  // =========================================================================
+  // FOUND: UNIFIED "BEFORE YOU BUY" INVENTORY CHECK
+  // =========================================================================
+
+  const checkItemInventory = useCallback((query: string): SearchMatchResult => {
+    return checkItemInventoryPure(query, durableItems, items, purchaseHistory);
+  }, [durableItems, items, purchaseHistory]);
 
   // =========================================================================
   // PANTRY ACTIONS
@@ -1443,12 +1637,14 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Reset/Clear for active user
   const resetToDemoData = () => {
     const initialItems = activeUser.id === 'demo-user-001' ? USER_001_INITIAL_ITEMS : USER_002_INITIAL_ITEMS;
+    const initialDurables = activeUser.id === 'demo-user-001' ? USER_001_INITIAL_DURABLES : USER_002_INITIAL_DURABLES;
     const initialGroceries = activeUser.id === 'demo-user-001' ? USER_001_INITIAL_GROCERIES : USER_002_INITIAL_GROCERIES;
     const initialHistory = activeUser.id === 'demo-user-001' ? USER_001_PURCHASE_HISTORY : USER_002_PURCHASE_HISTORY;
     const initialStats = activeUser.id === 'demo-user-001' ? USER_001_PURCHASE_STATS : USER_002_PURCHASE_STATS;
     const initialEvents = activeUser.id === 'demo-user-001' ? USER_001_USAGE_EVENTS : [];
 
     saveItems(initialItems);
+    saveDurableItems(initialDurables);
     saveGroceries(initialGroceries);
     saveHistory(initialHistory);
     saveStats(initialStats);
@@ -1457,6 +1653,7 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
   const clearAllData = () => {
     saveItems([]);
+    saveDurableItems([]);
     saveGroceries([]);
     saveHistory([]);
     saveStats([]);
@@ -1471,12 +1668,17 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
         availableUsers: DEMO_USERS,
         switchUser,
         items,
+        durableItems,
         groceryItems,
         usageEvents,
         impactMetrics,
         addItem,
         updateItem,
         deleteItem,
+        addDurableItem,
+        updateDurableItem,
+        deleteDurableItem,
+        checkItemInventory,
         markIngredientsUsed,
         addGroceryItem,
         addMissingIngredientsToGrocery,

@@ -11,13 +11,12 @@ export const Footer: React.FC = () => {
           <div className="md:col-span-2 space-y-3">
             <div className="flex items-center gap-2">
               <div className="w-7 h-7 rounded-sm bg-primary text-white flex items-center justify-center font-bold text-xs">
-                UF
+                FD
               </div>
-              <span className="font-serif font-bold text-lg text-[#1A1C1E]">USE IT FIRST</span>
+              <span className="font-serif font-bold text-lg text-[#1A1C1E]">FOUND</span>
             </div>
             <p className="text-xs sm:text-sm text-on-surface-variant max-w-sm leading-relaxed">
-              See what you have. Use what matters first. Household food intelligence to make the most
-              of the food already in your home.
+              Before you buy it. Find what you already have. Personal and household inventory to avoid duplicate purchases and food waste.
             </p>
           </div>
 

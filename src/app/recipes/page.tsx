@@ -101,9 +101,9 @@ export default function RecipesPage() {
   const filterTabs = ['All', 'Uses what I have', 'Under 30 min', 'Vegetarian', 'Quick'];
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      {/* Breadcrumbs */}
-      <Breadcrumbs items={[{ label: 'Pantry Recipes' }]} />
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
+        <Breadcrumbs items={[{ label: 'Pantry Recipes' }]} />
 
       {/* Header */}
       <div className="mt-3 mb-8">
@@ -129,7 +129,7 @@ export default function RecipesPage() {
             placeholder="Search recipes or ingredients (e.g. spinach, paneer, pasta)…"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full sm:max-w-sm px-3.5 py-2 text-sm bg-earth-50/80 border border-surface-border rounded-xl focus:bg-white focus:outline-hidden"
+            className="w-full sm:max-w-sm px-3.5 py-2 text-sm bg-earth-50/80 border border-surface-border rounded-xl focus:bg-white focus:outline-none"
             aria-label="Search recipes"
           />
 
@@ -179,6 +179,7 @@ export default function RecipesPage() {
           }}
         />
       )}
+      </main>
     </div>
   );
 }

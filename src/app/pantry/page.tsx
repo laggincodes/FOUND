@@ -159,7 +159,8 @@ export default function PantryPage() {
   }, [items, getItemAssessment]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+      <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
       {/* Breadcrumbs */}
       <Breadcrumbs items={[{ label: 'My Pantry' }]} />
 
@@ -208,7 +209,7 @@ export default function PantryPage() {
               placeholder="Search pantry items, categories, storage notes…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-surface-container-low border border-[#E3E2E6] rounded-xs focus:bg-white focus:outline-hidden focus:border-primary transition-colors"
+              className="w-full pl-10 pr-4 py-2 text-xs sm:text-sm bg-surface-container-low border border-[#E3E2E6] rounded-xs focus:bg-white focus:outline-none focus:border-primary transition-colors"
               aria-label="Search pantry inventory"
             />
           </div>
@@ -224,7 +225,7 @@ export default function PantryPage() {
                 id="sort-select"
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="px-2.5 py-1.5 text-xs font-medium bg-surface-container-low border border-[#E3E2E6] rounded-xs focus:bg-white focus:outline-hidden text-[#1A1C1E] cursor-pointer"
+                className="px-2.5 py-1.5 text-xs font-medium bg-surface-container-low border border-[#E3E2E6] rounded-xs focus:bg-white focus:outline-none text-[#1A1C1E] cursor-pointer"
               >
                 <option value="priority">Sort by Priority (Urgent First)</option>
                 <option value="date">Sort by Date Proximity</option>
@@ -525,7 +526,7 @@ export default function PantryPage() {
               required
               value={editForm.name}
               onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
-              className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-hidden focus:border-primary"
+              className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-none focus:border-primary"
             />
           </div>
 
@@ -539,7 +540,7 @@ export default function PantryPage() {
                 required
                 value={editForm.quantity}
                 onChange={(e) => setEditForm({ ...editForm, quantity: parseFloat(e.target.value) || 1 })}
-                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-hidden focus:border-primary"
+                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-none focus:border-primary"
               />
             </div>
             <div>
@@ -549,7 +550,7 @@ export default function PantryPage() {
                 required
                 value={editForm.unit}
                 onChange={(e) => setEditForm({ ...editForm, unit: e.target.value })}
-                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-hidden focus:border-primary"
+                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-none focus:border-primary"
                 placeholder="e.g. g, kg, L, pcs, bunch"
               />
             </div>
@@ -561,7 +562,7 @@ export default function PantryPage() {
               <select
                 value={editForm.category}
                 onChange={(e) => setEditForm({ ...editForm, category: e.target.value as FoodCategory })}
-                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-hidden text-[#1A1C1E] cursor-pointer"
+                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-none text-[#1A1C1E] cursor-pointer"
               >
                 <option value="Produce">Produce</option>
                 <option value="Dairy & Eggs">Dairy & Eggs</option>
@@ -580,7 +581,7 @@ export default function PantryPage() {
               <select
                 value={editForm.storageLocation}
                 onChange={(e) => setEditForm({ ...editForm, storageLocation: e.target.value as StorageLocation })}
-                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-hidden text-[#1A1C1E] cursor-pointer"
+                className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-none text-[#1A1C1E] cursor-pointer"
               >
                 <option value="Fridge">Fridge</option>
                 <option value="Cupboard / Pantry">Cupboard / Pantry</option>
@@ -596,7 +597,7 @@ export default function PantryPage() {
               type="date"
               value={editForm.bestBefore}
               onChange={(e) => setEditForm({ ...editForm, bestBefore: e.target.value })}
-              className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-hidden focus:border-primary"
+              className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-none focus:border-primary"
             />
           </div>
 
@@ -619,7 +620,7 @@ export default function PantryPage() {
               value={editForm.notes}
               onChange={(e) => setEditForm({ ...editForm, notes: e.target.value })}
               placeholder="e.g. Crisp leaves, store airtight"
-              className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-hidden focus:border-primary"
+              className="w-full px-3 py-2 bg-surface-container-low border border-[#E3E2E6] rounded-xs text-sm focus:bg-white focus:outline-none focus:border-primary"
             />
           </div>
 
@@ -640,6 +641,7 @@ export default function PantryPage() {
           </div>
         </form>
       </Modal>
+      </main>
     </div>
   );
 }

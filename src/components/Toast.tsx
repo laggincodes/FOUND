@@ -36,7 +36,7 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       {children}
       {/* Toast Notification Container */}
       <div
-        className="fixed bottom-20 md:bottom-6 right-4 sm:right-6 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"
+        className="fixed bottom-20 md:bottom-6 left-4 sm:left-auto right-4 sm:right-6 z-50 flex flex-col gap-2 max-w-sm pointer-events-none"
         aria-live="polite"
       >
         {toasts.map((toast) => (

@@ -199,10 +199,10 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onEdit, showStitchActi
 
       {/* Stitch Section 1 Actions (Cook now, Freeze/preserve, Mark used) */}
       {showStitchActions ? (
-        <div className="pt-3 border-t border-[#E3E2E6] flex flex-wrap items-center justify-between gap-2 text-xs">
+        <div className="pt-3 border-t border-[#E3E2E6] flex flex-wrap items-center justify-between gap-1.5 text-xs">
           <Link
             href="/recipes"
-            className="inline-flex items-center gap-1 font-semibold text-primary hover:text-primary-hover hover:underline"
+            className="inline-flex items-center gap-1 font-semibold text-primary hover:text-primary-hover hover:underline px-2 py-1.5 rounded-xs hover:bg-surface-container min-h-[36px]"
           >
             <Utensils className="w-3.5 h-3.5" />
             <span>Cook now</span>
@@ -210,7 +210,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onEdit, showStitchActi
 
           <button
             onClick={handleFreezePreserve}
-            className="inline-flex items-center gap-1 text-on-surface-variant hover:text-[#1A1C1E] font-medium"
+            className="inline-flex items-center gap-1 text-on-surface-variant hover:text-[#1A1C1E] font-medium px-2 py-1.5 rounded-xs hover:bg-surface-container min-h-[36px] cursor-pointer"
             title="Move to freezer to prevent waste"
           >
             <Snowflake className="w-3.5 h-3.5" />
@@ -219,7 +219,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onEdit, showStitchActi
 
           <button
             onClick={handleRestock}
-            className="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary font-medium"
+            className="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary font-medium px-2 py-1.5 rounded-xs hover:bg-surface-container min-h-[36px] cursor-pointer"
             title="Add to grocery shopping list"
           >
             <ShoppingCart className="w-3.5 h-3.5" />
@@ -228,7 +228,7 @@ export const FoodCard: React.FC<FoodCardProps> = ({ item, onEdit, showStitchActi
 
           <button
             onClick={handleMarkItemUsed}
-            className="inline-flex items-center gap-1 font-semibold text-[#97472E] hover:underline"
+            className="inline-flex items-center gap-1 font-semibold text-[#97472E] hover:underline px-2 py-1.5 rounded-xs hover:bg-[#FFDBD0]/40 min-h-[36px] cursor-pointer"
           >
             <Check className="w-3.5 h-3.5" />
             <span>Mark used</span>

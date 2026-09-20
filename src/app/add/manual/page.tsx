@@ -97,9 +97,9 @@ export default function ManualAddPage() {
   };
 
   return (
-    <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
-      {/* Breadcrumbs */}
-      <Breadcrumbs
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+      <main className="max-w-2xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
+        <Breadcrumbs
         items={[
           { label: 'Add Food', href: '/add' },
           { label: 'Manual Entry' },
@@ -205,7 +205,7 @@ export default function ManualAddPage() {
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
-              className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-[#C84B31]"
+              className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C84B31]"
               autoComplete="off"
             />
 
@@ -260,7 +260,7 @@ export default function ManualAddPage() {
                 required
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-[#C84B31]"
+                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C84B31]"
               />
             </div>
             <div>
@@ -274,7 +274,7 @@ export default function ManualAddPage() {
                 placeholder="e.g. g, kg, L, ml, pcs, bunch"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden focus:ring-1 focus:ring-[#C84B31]"
+                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C84B31]"
               />
             </div>
           </div>
@@ -289,7 +289,7 @@ export default function ManualAddPage() {
                 id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as FoodCategory)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden text-ink cursor-pointer"
+                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none text-ink cursor-pointer"
               >
                 <option value="Produce">Produce (Vegetables / Fruits)</option>
                 <option value="Dairy & Eggs">Dairy & Eggs</option>
@@ -312,7 +312,7 @@ export default function ManualAddPage() {
                 id="storage-location"
                 value={storageLocation}
                 onChange={(e) => setStorageLocation(e.target.value as StorageLocation)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden text-ink cursor-pointer"
+                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none text-ink cursor-pointer"
               >
                 <option value="Fridge">Fridge</option>
                 <option value="Cupboard / Pantry">Cupboard / Pantry</option>
@@ -333,7 +333,7 @@ export default function ManualAddPage() {
                 type="date"
                 value={bestBefore}
                 onChange={(e) => setBestBefore(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden"
+                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none"
               />
               <p className="text-[11px] text-ink-faint mt-1">Optional. System never invents a date.</p>
             </div>
@@ -347,7 +347,7 @@ export default function ManualAddPage() {
                 type="date"
                 value={purchaseDate}
                 onChange={(e) => setPurchaseDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden"
+                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none"
               />
             </div>
           </div>
@@ -381,7 +381,7 @@ export default function ManualAddPage() {
               placeholder="e.g. Opened yesterday, seal tightly, ripe for cooking"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-hidden"
+              className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none"
             />
           </div>
 
@@ -404,6 +404,7 @@ export default function ManualAddPage() {
           </div>
         </form>
       )}
+      </main>
     </div>
   );
 }
