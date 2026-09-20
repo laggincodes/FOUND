@@ -97,7 +97,7 @@ export default function ManualAddPage() {
   };
 
   return (
-    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#121513] bg-editorial-pattern text-[#EFF1EC]">
       <main className="max-w-2xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
         <Breadcrumbs
         items={[
@@ -109,50 +109,50 @@ export default function ManualAddPage() {
       <div className="mt-4 mb-8">
         <Link
           href="/add"
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-ink-muted hover:text-ink mb-3 transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-mono uppercase tracking-wider text-[#8E968F] hover:text-[#EFF1EC] mb-3 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Back to choices</span>
         </Link>
-        <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-ink tracking-tight">
+        <h1 className="font-serif text-3xl sm:text-4xl font-extrabold text-[#EFF1EC] tracking-tight">
           Add Food Manually
         </h1>
-        <p className="text-sm text-ink-muted mt-1">
+        <p className="text-sm text-[#8E968F] font-sans mt-1">
           Record item details. The priority engine will immediately assess its planning urgency.
         </p>
       </div>
 
       {/* Success State */}
       {addedItem ? (
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border border-surface-border shadow-soft animate-in fade-in">
-          <div className="w-12 h-12 rounded-2xl bg-[#EAF5EE] text-[#1E7245] flex items-center justify-center mb-4">
+        <div className="bg-[#181C19] rounded-sm p-6 sm:p-8 border border-[#28302A] shadow-card animate-in fade-in">
+          <div className="w-12 h-12 rounded-xs bg-[#16261B] text-[#78B48B] border border-[#243F2C] flex items-center justify-center mb-4">
             <CheckCircle2 className="w-6 h-6 stroke-[2]" />
           </div>
 
-          <h2 className="font-serif font-bold text-2xl text-ink">
+          <h2 className="font-serif font-bold text-2xl text-[#EFF1EC] tracking-tight">
             &ldquo;{addedItem.name}&rdquo; added to pantry
           </h2>
-          <p className="text-sm text-ink-muted mt-1">
+          <p className="text-sm text-[#8E968F] font-sans mt-1">
             Added {addedItem.quantity} {addedItem.unit} to your {addedItem.storageLocation}.
           </p>
 
           {/* Computed priority pill */}
-          <div className="mt-4 p-4 rounded-xl bg-earth-50 border border-surface-border text-xs">
-            <div className="flex items-center justify-between gap-2 mb-2">
-              <span className="font-semibold text-ink">Assigned Planning Priority:</span>
+          <div className="mt-4 p-4 rounded-xs bg-[#141715] border border-[#28302A] text-xs">
+            <div className="flex items-center justify-between gap-2 mb-2 font-mono">
+              <span className="text-[#EFF1EC]">Assigned Planning Priority:</span>
               <PriorityBadge tier={getItemAssessment(addedItem).tier} size="sm" />
             </div>
-            <p className="text-ink-muted">
-              <strong>Rationale: </strong>
+            <p className="text-[#8E968F] font-sans">
+              <strong className="text-[#EFF1EC]">Rationale: </strong>
               {getItemAssessment(addedItem).primaryReason}
             </p>
           </div>
 
           {/* Next Action Links */}
-          <div className="mt-6 pt-6 border-t border-earth-100 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+          <div className="mt-6 pt-6 border-t border-[#222824] flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
             <button
               onClick={handleResetForAnother}
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#C84B31] hover:bg-[#b03e26] text-white font-semibold text-sm rounded-xl transition-colors min-h-[44px]"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#3B6647] hover:bg-[#467854] text-[#EFF1EC] font-mono text-xs uppercase tracking-wider font-medium rounded-xs border border-[#4E805B]/30 shadow-subtle transition-colors min-h-[44px] cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Add Another Item</span>
@@ -160,15 +160,15 @@ export default function ManualAddPage() {
 
             <Link
               href="/pantry"
-              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-earth-100 hover:bg-earth-200 text-ink font-medium text-sm rounded-xl transition-colors min-h-[44px]"
+              className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-[#1E2420] hover:bg-[#262E28] text-[#EFF1EC] font-mono text-xs rounded-xs border border-[#28302A] transition-colors min-h-[44px]"
             >
-              <Package className="w-4 h-4 text-ink-muted" />
+              <Package className="w-4 h-4 text-[#8E968F]" />
               <span>View in Pantry</span>
             </Link>
 
             <Link
               href="/priority"
-              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs text-ink-muted hover:text-ink font-semibold transition-colors min-h-[44px]"
+              className="inline-flex items-center justify-center gap-1.5 px-4 py-2.5 text-xs font-mono uppercase tracking-wider text-[#78B48B] hover:text-[#93D4A8] transition-colors min-h-[44px]"
             >
               <span>Check Priority Board</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -179,11 +179,11 @@ export default function ManualAddPage() {
         /* The Validated Form */
         <form
           onSubmit={handleSubmit}
-          className="bg-white rounded-2xl p-6 sm:p-8 border border-surface-border shadow-soft space-y-5"
+          className="bg-[#181C19] rounded-sm p-6 sm:p-8 border border-[#28302A] space-y-5"
           noValidate
         >
           {errorMsg && (
-            <div className="p-3 bg-[#FEF2F2] border border-[#FEE2E2] rounded-xl text-xs text-[#DC2626] flex items-center gap-2">
+            <div className="p-3 bg-[#2D1915] border border-[#482520] rounded-xs text-xs font-mono text-[#FF9E90] flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span>{errorMsg}</span>
             </div>
@@ -191,8 +191,8 @@ export default function ManualAddPage() {
 
           {/* Food Name with Library Autocomplete */}
           <div className="relative">
-            <label htmlFor="food-name" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
-              Food Name <span className="text-[#C84B31]">*</span>
+            <label htmlFor="food-name" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
+              Food Name <span className="text-[#FF9E90]">*</span>
             </label>
             <input
               id="food-name"
@@ -205,13 +205,13 @@ export default function ManualAddPage() {
                 setShowSuggestions(true);
               }}
               onFocus={() => setShowSuggestions(true)}
-              className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C84B31]"
+              className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm text-[#EFF1EC] focus:border-[#4B7A58] focus:outline-none placeholder-[#5A635B]"
               autoComplete="off"
             />
 
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-surface-border rounded-xl shadow-soft z-50 overflow-hidden divide-y divide-surface-border max-h-52 overflow-y-auto">
-                <div className="px-3 py-1.5 bg-earth-50 text-[10px] uppercase font-bold text-ink-muted">
+              <div className="absolute top-full left-0 right-0 mt-1 bg-[#181C19] border border-[#28302A] rounded-xs shadow-card z-50 overflow-hidden divide-y divide-[#222824] max-h-52 overflow-y-auto">
+                <div className="px-3 py-1.5 bg-[#141715] text-[10px] font-mono uppercase font-bold text-[#8E968F]">
                   Library Suggestions
                 </div>
                 {suggestions.map((item) => (
@@ -227,17 +227,17 @@ export default function ManualAddPage() {
                       else if (item.storageType === 'pantry') setStorageLocation('Cupboard / Pantry');
                       setShowSuggestions(false);
                     }}
-                    className="w-full px-3 py-2 text-left hover:bg-earth-50 flex items-center justify-between text-xs cursor-pointer transition-colors"
+                    className="w-full px-3 py-2 text-left hover:bg-[#1E2420] flex items-center justify-between text-xs cursor-pointer transition-colors"
                   >
                     <div>
-                      <span className="font-semibold text-ink">{item.name}</span>
+                      <span className="font-serif font-bold text-sm text-[#EFF1EC]">{item.name}</span>
                       {item.aliases.length > 0 && (
-                        <span className="text-[10px] text-ink-muted ml-1.5">
+                        <span className="text-[10px] font-sans text-[#8E968F] ml-1.5">
                           ({item.aliases.slice(0, 2).join(', ')})
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-ink-muted font-medium px-1.5 py-0.5 rounded-md bg-earth-100">
+                    <span className="text-[10px] font-mono text-[#8E968F] px-1.5 py-0.5 rounded-xs bg-[#222824] border border-[#2B342D]">
                       {item.category}
                     </span>
                   </button>
@@ -249,8 +249,8 @@ export default function ManualAddPage() {
           {/* Quantity and Unit */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label htmlFor="quantity" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
-                Quantity <span className="text-[#C84B31]">*</span>
+              <label htmlFor="quantity" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
+                Quantity <span className="text-[#FF9E90]">*</span>
               </label>
               <input
                 id="quantity"
@@ -260,12 +260,12 @@ export default function ManualAddPage() {
                 required
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C84B31]"
+                className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm text-[#EFF1EC] focus:border-[#4B7A58] focus:outline-none font-mono"
               />
             </div>
             <div>
-              <label htmlFor="unit" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
-                Unit <span className="text-[#C84B31]">*</span>
+              <label htmlFor="unit" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
+                Unit <span className="text-[#FF9E90]">*</span>
               </label>
               <input
                 id="unit"
@@ -274,7 +274,7 @@ export default function ManualAddPage() {
                 placeholder="e.g. g, kg, L, ml, pcs, bunch"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#C84B31]"
+                className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm text-[#EFF1EC] focus:border-[#4B7A58] focus:outline-none font-mono placeholder-[#5A635B]"
               />
             </div>
           </div>
@@ -282,14 +282,14 @@ export default function ManualAddPage() {
           {/* Category & Storage Location */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="category" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
+              <label htmlFor="category" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
                 Category
               </label>
               <select
                 id="category"
                 value={category}
                 onChange={(e) => setCategory(e.target.value as FoodCategory)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none text-ink cursor-pointer"
+                className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm focus:border-[#4B7A58] focus:outline-none text-[#EFF1EC] cursor-pointer"
               >
                 <option value="Produce">Produce (Vegetables / Fruits)</option>
                 <option value="Dairy & Eggs">Dairy & Eggs</option>
@@ -305,14 +305,14 @@ export default function ManualAddPage() {
             </div>
 
             <div>
-              <label htmlFor="storage-location" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
+              <label htmlFor="storage-location" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
                 Storage Location
               </label>
               <select
                 id="storage-location"
                 value={storageLocation}
                 onChange={(e) => setStorageLocation(e.target.value as StorageLocation)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none text-ink cursor-pointer"
+                className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm focus:border-[#4B7A58] focus:outline-none text-[#EFF1EC] cursor-pointer"
               >
                 <option value="Fridge">Fridge</option>
                 <option value="Cupboard / Pantry">Cupboard / Pantry</option>
@@ -325,7 +325,7 @@ export default function ManualAddPage() {
           {/* Dates: Best-Before & Purchase */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label htmlFor="best-before" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
+              <label htmlFor="best-before" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
                 Best-Before / Use-By Date
               </label>
               <input
@@ -333,13 +333,13 @@ export default function ManualAddPage() {
                 type="date"
                 value={bestBefore}
                 onChange={(e) => setBestBefore(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm text-[#EFF1EC] focus:border-[#4B7A58] focus:outline-none font-mono"
               />
-              <p className="text-[11px] text-ink-faint mt-1">Optional. System never invents a date.</p>
+              <p className="text-[11px] font-mono text-[#5A635B] mt-1">Optional. System never invents a date.</p>
             </div>
 
             <div>
-              <label htmlFor="purchase-date" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
+              <label htmlFor="purchase-date" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
                 Purchase Date
               </label>
               <input
@@ -347,23 +347,23 @@ export default function ManualAddPage() {
                 type="date"
                 value={purchaseDate}
                 onChange={(e) => setPurchaseDate(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none"
+                className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm text-[#EFF1EC] focus:border-[#4B7A58] focus:outline-none font-mono"
               />
             </div>
           </div>
 
           {/* Opened Checkbox */}
-          <div className="p-3.5 bg-earth-50/70 border border-surface-border rounded-xl">
+          <div className="p-3.5 bg-[#141715] border border-[#28302A] rounded-xs">
             <label className="flex items-start gap-3 cursor-pointer">
               <input
                 type="checkbox"
                 checked={opened}
                 onChange={(e) => setOpened(e.target.checked)}
-                className="rounded border-surface-border text-[#C84B31] focus:ring-[#C84B31] w-4 h-4 mt-0.5"
+                className="rounded-xs border-[#28302A] bg-[#121513] text-[#3B6647] focus:ring-0 w-4 h-4 mt-0.5"
               />
               <div>
-                <span className="text-sm font-semibold text-ink block">Package is currently opened</span>
-                <span className="text-xs text-ink-muted block mt-0.5">
+                <span className="text-sm font-semibold text-[#EFF1EC] block font-sans">Package is currently opened</span>
+                <span className="text-xs text-[#8E968F] block mt-0.5 font-sans">
                   Opened items (especially dairy and fresh produce) oxidize faster and are scored with higher priority.
                 </span>
               </div>
@@ -372,7 +372,7 @@ export default function ManualAddPage() {
 
           {/* Notes */}
           <div>
-            <label htmlFor="notes" className="block text-xs font-bold text-ink mb-1.5 uppercase tracking-wide">
+            <label htmlFor="notes" className="block text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-1.5">
               Notes (Optional)
             </label>
             <input
@@ -381,22 +381,22 @@ export default function ManualAddPage() {
               placeholder="e.g. Opened yesterday, seal tightly, ripe for cooking"
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              className="w-full px-3.5 py-2.5 bg-earth-50 border border-surface-border rounded-xl text-sm focus:bg-white focus:outline-none"
+              className="w-full px-3.5 py-2.5 bg-[#141715] border border-[#28302A] rounded-xs text-sm text-[#EFF1EC] focus:border-[#4B7A58] focus:outline-none placeholder-[#5A635B]"
             />
           </div>
 
           {/* Submit Actions */}
-          <div className="flex items-center justify-between pt-4 border-t border-earth-100">
+          <div className="flex items-center justify-between pt-4 border-t border-[#222824]">
             <Link
               href="/add"
-              className="px-4 py-2.5 text-sm text-ink-muted hover:text-ink font-medium rounded-xl hover:bg-earth-100 transition-colors min-h-[44px] inline-flex items-center"
+              className="px-4 py-2 text-xs font-mono text-[#8E968F] hover:text-[#EFF1EC] font-medium rounded-xs hover:bg-[#1E2420] transition-colors min-h-[40px] inline-flex items-center"
             >
               Cancel
             </Link>
 
             <button
               type="submit"
-              className="inline-flex items-center justify-center gap-2 bg-[#C84B31] hover:bg-[#b03e26] text-white font-semibold px-6 py-2.5 rounded-xl shadow-xs transition-colors text-sm min-h-[44px]"
+              className="inline-flex items-center justify-center gap-2 bg-[#3B6647] hover:bg-[#467854] text-[#EFF1EC] font-mono text-xs uppercase tracking-wider font-medium px-6 py-2.5 rounded-xs border border-[#4E805B]/30 shadow-subtle transition-colors min-h-[40px] cursor-pointer"
             >
               <PlusCircle className="w-4 h-4" />
               <span>Save to Pantry</span>

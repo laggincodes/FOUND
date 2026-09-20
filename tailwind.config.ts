@@ -9,68 +9,72 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Stitch core color palette
-        background: "#FAF9FC",
-        surface: "#FAF9FC",
-        "surface-container": "#EEEDF1",
-        "surface-container-low": "#F4F3F7",
-        "surface-container-high": "#E9E7EB",
-        "surface-container-highest": "#E3E2E6",
-        "on-surface": "#1A1C1E",
-        "on-surface-variant": "#424842",
-        outline: "#727972",
-        "outline-variant": "#C2C8C0",
-        error: "#BA1A1A",
+        // Dark Editorial core color palette
+        background: "#121513",
+        surface: "#181C19",
+        "surface-container": "#222824",
+        "surface-container-low": "#1C211D",
+        "surface-container-high": "#272F29",
+        "surface-container-highest": "#2E3730",
+        "on-surface": "#EFF1EC",
+        "on-surface-variant": "#919992",
+        outline: "#2C342E",
+        "outline-variant": "#232A25",
+        error: "#CF6679",
 
-        // Primary (Green = primary action / healthy / core product)
+        // Primary (Muted Forest Green)
         primary: {
-          DEFAULT: "#32533C",
-          container: "#4A6B53",
-          fixed: "#C7ECCE",
-          hover: "#284330",
+          DEFAULT: "#3B6647",
+          container: "#1E3324",
+          fixed: "#284430",
+          hover: "#487C57",
+          text: "#7DB88F",
         },
 
-        // Secondary (Terracotta = urgent attention / USE FIRST)
+        // Secondary (Muted Terracotta / USE FIRST)
         secondary: {
-          DEFAULT: "#97472E",
-          fixed: "#FFDBD0",
-          hover: "#823c26",
+          DEFAULT: "#B35A43",
+          fixed: "#2E1C18",
+          hover: "#C9674D",
         },
 
-        // Tertiary (Amber = use soon / caution / USE SOON)
+        // Tertiary (Muted Amber / USE SOON)
         tertiary: {
-          DEFAULT: "#664500",
-          fixed: "#FFDEAE",
-          hover: "#523700",
+          DEFAULT: "#C4903E",
+          fixed: "#2B2314",
+          hover: "#D69F47",
         },
 
-        // Priority explicit semantic mapping
+        // Priority explicit semantic mapping (Dark & understated)
         priority: {
-          first: "#97472E",
-          firstBg: "#FFDBD0",
-          firstBorder: "#F5C2B4",
-          soon: "#664500",
-          soonBg: "#FFDEAE",
-          soonBorder: "#FAD090",
-          safe: "#32533C",
-          safeBg: "#C7ECCE",
-          safeBorder: "#A8DEB4",
+          first: "#D9775E",
+          firstBg: "#291916",
+          firstBorder: "#4A2822",
+          soon: "#DEAB57",
+          soonBg: "#292214",
+          soonBorder: "#45371F",
+          safe: "#7DB88F",
+          safeBg: "#17261C",
+          safeBorder: "#27402F",
         },
       },
       fontFamily: {
         serif: ["Newsreader", "Georgia", "serif"],
         sans: ["'Plus Jakarta Sans'", "system-ui", "-apple-system", "sans-serif"],
+        mono: ["'JetBrains Mono'", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "monospace"],
       },
       borderRadius: {
-        xs: "0.125rem",
-        sm: "0.25rem",
+        xs: "0.25rem",
+        sm: "0.375rem",
         md: "0.5rem",
         lg: "0.75rem",
+        xl: "1rem",
+        "2xl": "1.25rem",
       },
       boxShadow: {
-        subtle: "0 1px 3px 0 rgba(26, 28, 30, 0.04), 0 1px 2px -1px rgba(26, 28, 30, 0.03)",
-        card: "0 2px 8px -2px rgba(26, 28, 30, 0.06), 0 1px 4px -1px rgba(26, 28, 30, 0.03)",
-        elevated: "0 8px 24px -4px rgba(26, 28, 30, 0.08), 0 3px 8px -2px rgba(26, 28, 30, 0.04)",
+        subtle: "0 1px 2px 0 rgba(0, 0, 0, 0.3)",
+        card: "0 2px 8px -2px rgba(0, 0, 0, 0.4)",
+        elevated: "0 8px 24px -4px rgba(0, 0, 0, 0.5)",
       },
     },
   },

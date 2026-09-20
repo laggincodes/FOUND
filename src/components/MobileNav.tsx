@@ -60,7 +60,7 @@ export const MobileNav: React.FC = () => {
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#FBFBFA]/95 backdrop-blur-lg border-t border-[#E2E5E1] px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_10px_rgba(0,0,0,0.03)]"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-[#161A17]/95 backdrop-blur-lg border-t border-[#262E28] px-2 pb-[env(safe-area-inset-bottom)] shadow-[0_-2px_10px_rgba(0,0,0,0.5)]"
       aria-label="Mobile Bottom Navigation"
     >
       <div className="flex items-center justify-around h-16 max-w-md mx-auto">
@@ -74,25 +74,23 @@ export const MobileNav: React.FC = () => {
               href={item.href}
               className={`flex flex-col items-center justify-center flex-1 h-full min-h-[48px] py-1.5 transition-all relative ${
                 isActive
-                  ? 'text-primary font-bold'
-                  : 'text-[#5F6762] hover:text-[#191C1B]'
+                  ? 'text-[#EFF1EC] font-bold'
+                  : 'text-[#88928A] hover:text-[#EFF1EC]'
               }`}
               aria-current={isActive ? 'page' : undefined}
             >
               <div className="relative flex items-center justify-center">
                 <div
-                  className={`w-9 h-6 rounded-full flex items-center justify-center transition-colors ${
-                    isActive ? 'bg-[#E3F2E9] text-primary' : 'bg-transparent'
+                  className={`w-9 h-6 rounded-sm flex items-center justify-center transition-colors ${
+                    isActive ? 'bg-[#222824] text-[#7DB88F]' : 'bg-transparent'
                   }`}
                 >
-                  <Icon className={`w-4 h-4 ${isActive ? 'stroke-[2.4]' : 'stroke-[1.75]'}`} />
+                  <Icon className={`w-4 h-4 ${isActive ? 'stroke-[2.2]' : 'stroke-[1.6]'}`} />
                 </div>
 
                 {item.badge !== undefined && (
                   <span
-                    className={`absolute -top-1 -right-1 text-white text-[9px] font-extrabold min-w-[15px] h-[15px] px-1 rounded-full flex items-center justify-center shadow-xs ${
-                      item.badgeColor || 'bg-primary'
-                    }`}
+                    className="absolute -top-1 -right-1 text-white text-[9px] font-mono font-extrabold min-w-[15px] h-[15px] px-1 rounded-xs flex items-center justify-center bg-[#B35A43] border border-[#4A2822]"
                   >
                     {item.badge}
                   </span>
@@ -100,7 +98,7 @@ export const MobileNav: React.FC = () => {
               </div>
               <span
                 className={`text-[10px] mt-0.5 tracking-tight truncate max-w-[56px] text-center ${
-                  isActive ? 'font-bold text-primary' : 'font-medium text-[#5F6762]'
+                  isActive ? 'font-semibold text-[#EFF1EC]' : 'font-medium text-[#88928A]'
                 }`}
               >
                 {item.label}

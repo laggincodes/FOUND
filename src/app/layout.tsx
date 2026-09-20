@@ -71,7 +71,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdWebSite) }}
         />
       </head>
-      <body className="h-full flex flex-col font-sans bg-[#FAF9FC] text-[#1A1C1E] antialiased selection:bg-primary-fixed selection:text-primary">
+      <body className="h-full flex flex-col font-sans bg-[#121513] bg-editorial-pattern text-[#EFF1EC] antialiased selection:bg-primary selection:text-white">
         <PantryProvider>
           <ToastProvider>
             <Navbar />

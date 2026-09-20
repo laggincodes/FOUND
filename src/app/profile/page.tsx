@@ -95,9 +95,9 @@ export default function ProfilePage() {
   if (!isHydrated) {
     return (
       <div className="container mx-auto px-4 sm:px-6 py-8 max-w-4xl animate-pulse space-y-6">
-        <div className="h-6 w-32 bg-earth-200 rounded"></div>
-        <div className="h-10 w-64 bg-earth-200 rounded"></div>
-        <div className="h-48 bg-white rounded-2xl"></div>
+        <div className="h-6 w-32 bg-[#181C19] border border-[#28302A] rounded-xs"></div>
+        <div className="h-10 w-64 bg-[#181C19] border border-[#28302A] rounded-xs"></div>
+        <div className="h-48 bg-[#181C19] border border-[#28302A] rounded-xs"></div>
       </div>
     );
   }
@@ -107,29 +107,29 @@ export default function ProfilePage() {
       <Breadcrumbs items={[{ label: 'Household Settings' }]} />
 
       {/* Header */}
-      <div className="border-b border-surface-border pb-5">
+      <div className="border-b border-[#28302A] pb-5">
         <div className="flex items-center gap-2 mb-1.5">
-          <span className="px-2 py-0.5 rounded-full bg-olive-100 text-olive-800 text-[11px] font-bold uppercase tracking-wider">
+          <span className="px-2 py-0.5 rounded-xs bg-[#16261B] text-[#86EFAC] text-[10px] font-mono uppercase tracking-wider border border-[#23432B]">
             Household Profile
           </span>
-          <span className="text-xs text-ink-muted">Private & Local</span>
+          <span className="text-xs font-mono text-[#8E968F]">Private &amp; Local</span>
         </div>
-        <h1 className="font-serif font-bold text-3xl sm:text-4xl text-ink tracking-tight">
+        <h1 className="font-serif font-bold text-3xl sm:text-4xl text-[#EFF1EC] tracking-tight">
           {activeUser.householdName || `${activeUser.firstName}'s Household`}
         </h1>
-        <p className="text-sm text-ink-muted mt-1 max-w-xl">
+        <p className="text-sm text-[#8E968F] mt-1 max-w-xl">
           Configure household size, dietary choices, and manage excluded food recommendations.
         </p>
       </div>
 
       {/* Household Size & Dietary Preferences */}
-      <section className="bg-white p-6 rounded-2xl border border-surface-border shadow-xs space-y-6">
+      <section className="bg-[#181C19] p-6 rounded-xs border border-[#28302A] space-y-6">
         <div>
-          <h2 className="font-serif font-bold text-xl text-ink flex items-center gap-2">
-            <Users className="w-5 h-5 text-olive-700" />
+          <h2 className="font-serif font-bold text-xl text-[#EFF1EC] flex items-center gap-2">
+            <Users className="w-5 h-5 text-[#86EFAC]" />
             Household Members
           </h2>
-          <p className="text-xs text-ink-muted mt-0.5">
+          <p className="text-xs font-mono text-[#8E968F] mt-0.5">
             Adjusts default recipe portions and typical consumption cycles.
           </p>
           <div className="flex items-center gap-2 mt-3">
@@ -138,10 +138,10 @@ export default function ProfilePage() {
                 key={num}
                 type="button"
                 onClick={() => handleHouseholdSizeChange(num)}
-                className={`w-11 h-11 rounded-xl text-sm font-semibold border transition-all flex items-center justify-center ${
+                className={`w-11 h-11 rounded-xs text-sm font-mono border transition-all flex items-center justify-center ${
                   householdSize === num
-                    ? 'bg-olive-800 text-white border-olive-800 shadow-2xs scale-105'
-                    : 'bg-earth-50 text-ink border-surface-border hover:border-earth-400'
+                    ? 'bg-[#1E2420] text-[#EFF1EC] border-[#3B6647] shadow-2xs scale-105'
+                    : 'bg-[#141715] text-[#8E968F] border-[#28302A] hover:border-[#3B6647]/50 hover:text-[#EFF1EC]'
                 }`}
               >
                 {num}{num === 6 ? '+' : ''}
@@ -150,12 +150,12 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        <div className="border-t border-surface-border pt-6">
-          <h2 className="font-serif font-bold text-xl text-ink flex items-center gap-2">
-            <Utensils className="w-5 h-5 text-olive-700" />
+        <div className="border-t border-[#28302A] pt-6">
+          <h2 className="font-serif font-bold text-xl text-[#EFF1EC] flex items-center gap-2">
+            <Utensils className="w-5 h-5 text-[#86EFAC]" />
             Dietary Preferences
           </h2>
-          <p className="text-xs text-ink-muted mt-0.5">
+          <p className="text-xs font-mono text-[#8E968F] mt-0.5">
             Helps prioritize suitable recipes and filter out ingredients you don&apos;t consume.
           </p>
           <div className="flex flex-wrap gap-2 mt-3">
@@ -166,13 +166,13 @@ export default function ProfilePage() {
                   key={diet}
                   type="button"
                   onClick={() => handleToggleDiet(diet)}
-                  className={`px-3.5 py-1.5 rounded-xl text-xs font-medium border transition-all flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xs text-xs font-mono border transition-all flex items-center gap-1.5 ${
                     active
-                      ? 'bg-olive-700 text-white border-olive-700 shadow-2xs'
-                      : 'bg-white text-ink border-surface-border hover:border-earth-400'
+                      ? 'bg-[#1E2420] text-[#EFF1EC] border-[#3B6647] shadow-2xs'
+                      : 'bg-[#141715] text-[#8E968F] border-[#28302A] hover:border-[#3B6647]/50 hover:text-[#EFF1EC]'
                   }`}
                 >
-                  {active && <Check className="w-3.5 h-3.5" />}
+                  {active && <Check className="w-3.5 h-3.5 text-[#86EFAC]" />}
                   {diet}
                 </button>
               );
@@ -182,14 +182,14 @@ export default function ProfilePage() {
       </section>
 
       {/* Excluded / Hidden Recommendations */}
-      <section className="bg-white p-6 rounded-2xl border border-surface-border shadow-xs space-y-5">
+      <section className="bg-[#181C19] p-6 rounded-xs border border-[#28302A] space-y-5">
         <div>
-          <h2 className="font-serif font-bold text-xl text-ink flex items-center gap-2">
-            <Ban className="w-5 h-5 text-terracotta-600" />
+          <h2 className="font-serif font-bold text-xl text-[#EFF1EC] flex items-center gap-2">
+            <Ban className="w-5 h-5 text-[#F87171]" />
             Excluded Recommendations (&quot;Don&apos;t Suggest&quot;)
           </h2>
-          <p className="text-xs text-ink-muted mt-0.5">
-            Items you have asked Use It First never to suggest. You can restore them anytime.
+          <p className="text-xs font-mono text-[#8E968F] mt-0.5">
+            Items you have asked FOUND never to suggest. You can restore them anytime.
           </p>
         </div>
 
@@ -200,11 +200,11 @@ export default function ProfilePage() {
             placeholder="Add ingredient to never suggest (e.g. Bitter Gourd)..."
             value={customExclude}
             onChange={(e) => setCustomExclude(e.target.value)}
-            className="flex-1 px-3.5 py-2 text-xs bg-earth-50/50 border border-surface-border rounded-xl text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-olive-600"
+            className="flex-1 px-3.5 py-2 text-xs bg-[#141715] border border-[#28302A] rounded-xs text-[#EFF1EC] placeholder:text-[#5A635B] focus:outline-none focus:border-[#4B7A58]"
           />
           <button
             type="submit"
-            className="px-4 py-2 bg-earth-100 hover:bg-earth-200 text-ink text-xs font-semibold rounded-xl border border-surface-border transition-colors flex items-center gap-1"
+            className="px-4 py-2 bg-[#1E2420] hover:bg-[#262E28] text-[#EFF1EC] text-xs font-mono uppercase tracking-wider rounded-xs border border-[#28302A] transition-colors flex items-center gap-1"
           >
             <Plus className="w-3.5 h-3.5" />
             Exclude
@@ -213,7 +213,7 @@ export default function ProfilePage() {
 
         {/* Excluded items list */}
         {excludedItems.length === 0 ? (
-          <div className="p-4 bg-earth-50/50 rounded-xl border border-surface-border text-xs text-ink-muted text-center">
+          <div className="p-4 bg-[#141715] rounded-xs border border-[#28302A] text-xs font-mono text-[#8E968F] text-center">
             No excluded items. Use the &quot;Don&apos;t suggest&quot; button on any food card or recommendation to exclude foods.
           </div>
         ) : (
@@ -221,13 +221,13 @@ export default function ProfilePage() {
             {excludedItems.map((foodId) => (
               <div
                 key={foodId}
-                className="inline-flex items-center gap-2 px-3 py-1.5 bg-terracotta-50/70 border border-terracotta-200 rounded-xl text-xs text-terracotta-900 font-medium"
+                className="inline-flex items-center gap-2 px-3 py-1.5 bg-[#2D1915] border border-[#4D241D] rounded-xs text-xs font-mono text-[#F87171]"
               >
                 <span>{getReadableFoodName(foodId)}</span>
                 <button
                   type="button"
                   onClick={() => handleRestoreFood(foodId)}
-                  className="text-terracotta-700 hover:text-terracotta-900 p-0.5 rounded hover:bg-terracotta-100 transition-colors"
+                  className="text-[#F87171] hover:text-[#EFF1EC] p-0.5 rounded hover:bg-[#3D221D] transition-colors"
                   title="Allow suggestions again"
                 >
                   <RotateCcw className="w-3 h-3" />
@@ -239,27 +239,27 @@ export default function ProfilePage() {
       </section>
 
       {/* Household Data & Reset */}
-      <section className="bg-earth-50/50 p-6 rounded-2xl border border-surface-border space-y-4">
-        <h2 className="font-serif font-bold text-lg text-ink flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-olive-700" />
+      <section className="bg-[#181C19] p-6 rounded-xs border border-[#28302A] space-y-4">
+        <h2 className="font-serif font-bold text-lg text-[#EFF1EC] flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-[#86EFAC]" />
           Household Intelligence Overview
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
-          <div className="bg-white p-3 rounded-xl border border-surface-border">
-            <span className="text-ink-muted block">Purchase Records</span>
-            <span className="font-serif font-bold text-base text-ink mt-0.5 block">
+          <div className="bg-[#141715] p-3 rounded-xs border border-[#28302A]">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#8E968F] block">Purchase Records</span>
+            <span className="font-serif font-bold text-base text-[#EFF1EC] mt-0.5 block">
               {purchaseHistory.length} logs
             </span>
           </div>
-          <div className="bg-white p-3 rounded-xl border border-surface-border">
-            <span className="text-ink-muted block">Learned Cycles</span>
-            <span className="font-serif font-bold text-base text-ink mt-0.5 block">
+          <div className="bg-[#141715] p-3 rounded-xs border border-[#28302A]">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#8E968F] block">Learned Cycles</span>
+            <span className="font-serif font-bold text-base text-[#EFF1EC] mt-0.5 block">
               {purchaseStats.filter((s) => s.averageDaysBetweenPurchases).length} staples
             </span>
           </div>
-          <div className="col-span-2 sm:col-span-1 bg-white p-3 rounded-xl border border-surface-border">
-            <span className="text-ink-muted block">Active Household</span>
-            <span className="font-serif font-bold text-base text-ink mt-0.5 block truncate">
+          <div className="col-span-2 sm:col-span-1 bg-[#141715] p-3 rounded-xs border border-[#28302A]">
+            <span className="text-[10px] font-mono uppercase tracking-wider text-[#8E968F] block">Active Household</span>
+            <span className="font-serif font-bold text-base text-[#EFF1EC] mt-0.5 block truncate">
               {activeUser.firstName} ({activeUser.id})
             </span>
           </div>
@@ -274,7 +274,7 @@ export default function ProfilePage() {
                 showToast('Reset to demo baseline.');
               }
             }}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-white hover:bg-earth-100 border border-surface-border text-ink-muted hover:text-ink text-xs font-semibold rounded-xl transition-colors shadow-2xs"
+            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#141715] hover:bg-[#1E2420] border border-[#28302A] text-[#8E968F] hover:text-[#EFF1EC] text-xs font-mono uppercase tracking-wider rounded-xs transition-colors shadow-2xs"
           >
             <RotateCcw className="w-3.5 h-3.5" />
             Reset {activeUser.firstName}&apos;s Data to Demo Baseline
@@ -283,23 +283,23 @@ export default function ProfilePage() {
       </section>
 
       {/* Account & Session */}
-      <section className="bg-white p-6 rounded-2xl border border-surface-border space-y-4 shadow-2xs">
-        <h2 className="font-serif font-bold text-lg text-ink flex items-center gap-2">
-          <Users className="w-4 h-4 text-primary" />
-          <span>Account & Session</span>
+      <section className="bg-[#181C19] p-6 rounded-xs border border-[#28302A] space-y-4">
+        <h2 className="font-serif font-bold text-lg text-[#EFF1EC] flex items-center gap-2">
+          <Users className="w-4 h-4 text-[#86EFAC]" />
+          <span>Account &amp; Session</span>
         </h2>
         <div className="space-y-2.5 text-xs">
-          <div className="flex items-center justify-between py-2 border-b border-surface-border">
-            <span className="text-ink-muted">Display Name</span>
-            <span className="font-semibold text-ink">{activeUser.firstName}</span>
+          <div className="flex items-center justify-between py-2 border-b border-[#28302A]">
+            <span className="text-[#8E968F]">Display Name</span>
+            <span className="font-serif font-semibold text-[#EFF1EC]">{activeUser.firstName}</span>
           </div>
-          <div className="flex items-center justify-between py-2 border-b border-surface-border">
-            <span className="text-ink-muted">Email</span>
-            <span className="font-semibold text-ink">{activeUser.email || 'Not provided'}</span>
+          <div className="flex items-center justify-between py-2 border-b border-[#28302A]">
+            <span className="text-[#8E968F]">Email</span>
+            <span className="font-mono text-[#EFF1EC]">{activeUser.email || 'Not provided'}</span>
           </div>
-          <div className="flex items-center justify-between py-2 border-b border-surface-border">
-            <span className="text-ink-muted">Account Status</span>
-            <span className="inline-flex items-center gap-1 font-bold text-xs px-2 py-0.5 rounded-full bg-[#E3F2E9] text-[#1B3D2F]">
+          <div className="flex items-center justify-between py-2 border-b border-[#28302A]">
+            <span className="text-[#8E968F]">Account Status</span>
+            <span className="inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-wider px-2 py-0.5 rounded-xs bg-[#16261B] text-[#86EFAC] border border-[#23432B]">
               {isAuthenticated ? 'Authenticated (Supabase)' : 'Demo Session'}
             </span>
           </div>
@@ -310,7 +310,7 @@ export default function ProfilePage() {
             <button
               type="button"
               onClick={signOut}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FFF0ED] hover:bg-[#FFE5DF] text-[#97472E] border border-[#F5C2B4] text-xs font-bold rounded-xl transition-colors cursor-pointer"
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2D1915] hover:bg-[#3D221D] text-[#F87171] border border-[#4D241D] text-xs font-mono uppercase tracking-wider rounded-xs transition-colors cursor-pointer"
             >
               <LogOut className="w-3.5 h-3.5" />
               <span>Log out of FOUND</span>

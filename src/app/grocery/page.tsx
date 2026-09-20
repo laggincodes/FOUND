@@ -149,23 +149,23 @@ export default function GroceryListPage() {
   );
 
   return (
-    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#FBFBFA]">
+    <div className="min-h-screen pb-24 overflow-x-hidden bg-[#121513] bg-editorial-pattern text-[#EFF1EC]">
       <main className="max-w-4xl mx-auto px-4 sm:px-6 pt-5 sm:pt-8">
         <Breadcrumbs items={[{ label: 'Grocery List' }]} />
 
       {/* Header */}
-      <div className="mt-4 mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[#E3E2E6]">
+      <div className="mt-4 mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[#28302A]">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <span className="px-2 py-0.5 rounded-xs bg-[#FFDBD0] text-[#97472E] text-[11px] font-bold uppercase tracking-wider">
+            <span className="px-2 py-0.5 rounded-xs bg-[#2D1915] text-[#FF9E90] border border-[#482520] text-[10px] font-mono uppercase tracking-wider font-bold">
               Shopping Checklist
             </span>
-            <span className="text-xs text-outline font-medium">Household Sync</span>
+            <span className="text-xs text-[#8E968F] font-mono">Household Sync</span>
           </div>
-          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#1A1C1E] tracking-tight">
+          <h1 className="font-serif text-3xl sm:text-4xl lg:text-5xl font-bold text-[#EFF1EC] tracking-tight">
             Grocery List
           </h1>
-          <p className="text-sm sm:text-base text-on-surface-variant mt-2 max-w-2xl leading-relaxed">
+          <p className="text-sm sm:text-base text-[#8E968F] mt-2 max-w-2xl font-sans leading-relaxed">
             Plan what to buy to complete prioritized meals or restock essentials. Ticking items off automatically logs them into your kitchen pantry.
           </p>
         </div>
@@ -173,35 +173,35 @@ export default function GroceryListPage() {
         {/* Sub-Nav & Action buttons */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
           {/* Segmented Sub-Nav: Shopping List <-> Food Library */}
-          <div className="inline-flex p-1 bg-surface-container rounded-xs border border-[#E3E2E6] text-xs font-semibold">
-            <div className="px-3.5 py-1.5 rounded-xs bg-white text-[#1A1C1E] shadow-subtle flex items-center gap-1.5 border border-[#E3E2E6]">
-              <ShoppingCart className="w-3.5 h-3.5 text-primary" />
-              Shopping List
+          <div className="inline-flex p-1 bg-[#181C19] rounded-xs border border-[#28302A] text-xs font-mono">
+            <div className="px-3.5 py-1.5 rounded-xs bg-[#222824] text-[#EFF1EC] flex items-center gap-1.5 border border-[#323D35] font-bold">
+              <ShoppingCart className="w-3.5 h-3.5 text-[#78B48B]" />
+              <span>Shopping List</span>
               {toBuyItems.length > 0 && (
-                <span className="w-4 h-4 rounded-full bg-primary text-white flex items-center justify-center text-[10px]">
+                <span className="w-4 h-4 rounded-xs bg-[#3B6647] text-[#EFF1EC] flex items-center justify-center text-[10px] font-mono font-bold">
                   {toBuyItems.length}
                 </span>
               )}
             </div>
             <Link
               href="/grocery/library"
-              className="px-3.5 py-1.5 rounded-xs text-on-surface-variant hover:text-[#1A1C1E] transition-colors flex items-center gap-1.5"
+              className="px-3.5 py-1.5 rounded-xs text-[#8E968F] hover:text-[#EFF1EC] transition-colors flex items-center gap-1.5"
             >
               <BookOpen className="w-3.5 h-3.5" />
-              Food Library
+              <span>Food Library</span>
             </Link>
           </div>
 
           <Link
             href="/recipes"
-            className="inline-flex items-center gap-1.5 px-3 py-2 bg-white hover:bg-surface-container border border-[#C2C8C0] text-[#1A1C1E] text-xs font-semibold rounded-xs shadow-subtle transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#181C19] hover:bg-[#222824] border border-[#28302A] text-[#EFF1EC] text-xs font-mono uppercase tracking-wider rounded-xs transition-colors"
           >
-            <UtensilsCrossed className="w-3.5 h-3.5 text-primary" />
+            <UtensilsCrossed className="w-3.5 h-3.5 text-[#78B48B]" />
             <span>Recipes</span>
           </Link>
           <Link
             href="/pantry"
-            className="inline-flex items-center gap-1.5 px-3 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-semibold rounded-xs shadow-subtle transition-all"
+            className="inline-flex items-center gap-1.5 px-3 py-2 bg-[#3B6647] hover:bg-[#467854] text-[#EFF1EC] text-xs font-mono uppercase tracking-wider font-medium rounded-xs border border-[#4E805B]/30 shadow-subtle transition-colors"
           >
             <Package className="w-3.5 h-3.5" />
             <span>Pantry</span>
@@ -211,34 +211,34 @@ export default function GroceryListPage() {
 
       {/* Metrics / Status strip */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
-        <div className="bg-white p-4 rounded-xs border border-[#E3E2E6] shadow-subtle">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant block">
+        <div className="bg-[#181C19] p-4 rounded-sm border border-[#28302A]">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-[#8E968F] block">
             Items to Buy
           </span>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#97472E] mt-1">
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#FF9E90] mt-1">
             {isHydrated ? toBuyItems.length : '—'}
           </div>
-          <span className="text-[11px] text-outline mt-0.5 block">Needed in kitchen</span>
+          <span className="text-[11px] font-mono text-[#5A635B] mt-0.5 block">Needed in kitchen</span>
         </div>
 
-        <div className="bg-white p-4 rounded-xs border border-[#E3E2E6] shadow-subtle">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant block">
+        <div className="bg-[#181C19] p-4 rounded-sm border border-[#28302A]">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-[#8E968F] block">
             Purchased Today
           </span>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-primary mt-1">
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#78B48B] mt-1">
             {isHydrated ? purchasedItems.length : '—'}
           </div>
-          <span className="text-[11px] text-outline mt-0.5 block">Synced to pantry inventory</span>
+          <span className="text-[11px] font-mono text-[#5A635B] mt-0.5 block">Synced to pantry inventory</span>
         </div>
 
-        <div className="col-span-2 sm:col-span-1 bg-white p-4 rounded-xs border border-[#E3E2E6] shadow-subtle">
-          <span className="text-[11px] font-bold uppercase tracking-wider text-on-surface-variant block">
+        <div className="col-span-2 sm:col-span-1 bg-[#181C19] p-4 rounded-sm border border-[#28302A]">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-[#8E968F] block">
             Linked Recipes
           </span>
-          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#1A1C1E] mt-1">
+          <div className="font-serif text-2xl sm:text-3xl font-bold text-[#EFF1EC] mt-1">
             {isHydrated ? linkedRecipes.length : '—'}
           </div>
-          <span className="text-[11px] text-outline mt-0.5 block truncate">
+          <span className="text-[11px] font-mono text-[#5A635B] mt-0.5 block truncate">
             {linkedRecipes.length > 0 ? linkedRecipes.join(', ') : 'No recipe items'}
           </span>
         </div>
@@ -246,22 +246,22 @@ export default function GroceryListPage() {
 
       {/* SECTION: SUGGESTED FOR YOUR NEXT SHOP */}
       {recommendations.length > 0 && (
-        <section className="bg-white rounded-xs p-5 sm:p-6 border border-[#E3E2E6] shadow-subtle mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-4 border-b border-[#E3E2E6]">
+        <section className="bg-[#181C19] rounded-sm p-5 sm:p-6 border border-[#28302A] mb-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-4 mb-4 border-b border-[#28302A]">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xs bg-[#FFDBD0] text-[#97472E] flex items-center justify-center shrink-0">
+              <div className="w-8 h-8 rounded-xs bg-[#2D1915] text-[#FF9E90] border border-[#482520] flex items-center justify-center shrink-0">
                 <Sparkles className="w-4 h-4" />
               </div>
               <div>
-                <h2 className="font-serif font-bold text-xl text-[#1A1C1E]">
+                <h2 className="font-serif font-bold text-xl text-[#EFF1EC]">
                   Suggested for your next shop
                 </h2>
-                <p className="text-xs text-on-surface-variant mt-0.5">
+                <p className="text-xs text-[#8E968F] font-sans mt-0.5">
                   Calculated from {activeUser.householdName || 'your household'}&apos;s recurring purchase cycles, recipe plans, and low pantry stock.
                 </p>
               </div>
             </div>
-            <span className="text-xs px-2.5 py-1 rounded-xs bg-[#FFDBD0] text-[#97472E] font-bold self-start sm:self-auto">
+            <span className="text-xs font-mono px-2.5 py-1 rounded-xs bg-[#2D1915] text-[#FF9E90] border border-[#482520] font-bold self-start sm:self-auto">
               {recommendations.length} item{recommendations.length > 1 ? 's' : ''} due
             </span>
           </div>
@@ -270,27 +270,27 @@ export default function GroceryListPage() {
             {recommendations.map((rec) => (
               <div
                 key={rec.id}
-                className="p-4 rounded-xs border border-[#E3E2E6] bg-[#FAF9FC] hover:border-primary transition-all flex flex-col justify-between group"
+                className="p-4 rounded-xs border border-[#28302A] bg-[#141715] hover:border-[#38463B] transition-colors flex flex-col justify-between group"
               >
                 <div>
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <span className="font-serif font-bold text-base text-[#1A1C1E] block group-hover:text-primary transition-colors">
+                      <span className="font-serif font-bold text-base text-[#EFF1EC] block group-hover:text-[#78B48B] transition-colors tracking-tight">
                         {rec.name}
                       </span>
-                      <span className="text-[11px] text-outline block mt-0.5">
-                        Suggested: <strong>{rec.suggestedQuantity} {rec.suggestedUnit}</strong> • {rec.category}
+                      <span className="text-[11px] font-mono text-[#8E968F] block mt-0.5">
+                        Suggested: <strong className="text-[#EFF1EC]">{rec.suggestedQuantity} {rec.suggestedUnit}</strong> • {rec.category}
                       </span>
                     </div>
                     <span
-                      className={`px-2 py-0.5 rounded-xs text-[10px] font-bold uppercase tracking-wider shrink-0 border ${
+                      className={`px-2 py-0.5 rounded-xs text-[10px] font-mono font-bold uppercase tracking-wider shrink-0 border ${
                         rec.level === 1
-                          ? 'bg-[#FFDBD0] text-[#97472E] border-[#97472E]/20'
+                          ? 'bg-[#2D1915] text-[#FF9E90] border-[#482520]'
                           : rec.level === 2
-                          ? 'bg-amber-50 text-amber-800 border-amber-200'
+                          ? 'bg-[#282115] text-[#E5B567] border-[#453620]'
                           : rec.level === 3
-                          ? 'bg-primary/10 text-primary border-primary/20'
-                          : 'bg-surface-container text-on-surface-variant border-[#E3E2E6]'
+                          ? 'bg-[#16261B] text-[#78B48B] border-[#243F2C]'
+                          : 'bg-[#1E2420] text-[#8E968F] border-[#28302A]'
                       }`}
                     >
                       {rec.level === 1
@@ -303,22 +303,22 @@ export default function GroceryListPage() {
                     </span>
                   </div>
 
-                  <p className="text-xs text-on-surface-variant mt-3 font-normal leading-relaxed">
+                  <p className="text-xs text-[#8E968F] font-sans mt-3 font-normal leading-relaxed">
                     {rec.explanation}
                   </p>
                 </div>
 
-                <div className="mt-4 pt-3 border-t border-[#E3E2E6] flex items-center gap-2">
+                <div className="mt-4 pt-3 border-t border-[#222824] flex items-center gap-2">
                   <button
                     type="button"
                     onClick={() => {
                       addRecommendationToGrocery(rec);
                       showToast(`Added "${rec.name}" to your shopping list.`);
                     }}
-                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-primary hover:bg-primary-hover text-white text-xs font-semibold rounded-xs transition-colors shadow-subtle cursor-pointer min-h-[34px]"
+                    className="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 bg-[#3B6647] hover:bg-[#467854] text-[#EFF1EC] text-xs font-mono uppercase tracking-wider font-medium rounded-xs border border-[#4E805B]/30 transition-colors shadow-subtle cursor-pointer min-h-[34px]"
                   >
                     <Plus className="w-3.5 h-3.5" />
-                    <span>+ Add to list</span>
+                    <span>Add to list</span>
                   </button>
 
                   <button
@@ -327,7 +327,7 @@ export default function GroceryListPage() {
                       dismissRecommendation(rec.foodId);
                       showToast(`Dismissed "${rec.name}" for this session.`);
                     }}
-                    className="px-2.5 py-2 bg-white hover:bg-surface-container border border-[#C2C8C0] text-on-surface-variant hover:text-[#1A1C1E] text-xs font-medium rounded-xs transition-colors min-h-[34px]"
+                    className="px-2.5 py-2 bg-[#1E2420] hover:bg-[#262E28] border border-[#28302A] text-[#8E968F] hover:text-[#EFF1EC] text-xs font-mono rounded-xs transition-colors min-h-[34px] cursor-pointer"
                     title="Hide this recommendation for now"
                   >
                     Not now
@@ -339,7 +339,7 @@ export default function GroceryListPage() {
                       dontSuggestFood(rec.foodId);
                       showToast(`"${rec.name}" won't be suggested again.`);
                     }}
-                    className="p-2 text-outline hover:text-[#97472E] hover:bg-[#FFDBD0]/40 rounded-xs transition-colors min-h-[34px]"
+                    className="p-2 text-[#5A635B] hover:text-[#FF9E90] hover:bg-[#2D1915] rounded-xs transition-colors min-h-[34px] cursor-pointer"
                     title="Never suggest this food again"
                   >
                     <Ban className="w-3.5 h-3.5" />
@@ -352,9 +352,9 @@ export default function GroceryListPage() {
       )}
 
       {/* Quick Add Form with Food Library Autocomplete */}
-      <section className="bg-white rounded-xs p-5 border border-[#E3E2E6] shadow-subtle mb-8">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-on-surface-variant mb-3 flex items-center gap-1.5">
-          <Plus className="w-3.5 h-3.5 text-primary" />
+      <section className="bg-[#181C19] rounded-sm p-5 border border-[#28302A] mb-8">
+        <h2 className="text-xs font-mono uppercase tracking-wider text-[#8E968F] mb-3 flex items-center gap-1.5">
+          <Plus className="w-3.5 h-3.5 text-[#78B48B]" />
           <span>Add Item to Shopping List</span>
         </h2>
         <form onSubmit={handleQuickAdd} className="grid grid-cols-1 sm:grid-cols-12 gap-3">
@@ -371,14 +371,14 @@ export default function GroceryListPage() {
               onFocus={() => setShowSuggestions(true)}
               placeholder="Search or enter item (e.g. Tomatoes, Paneer, Coriander)"
               required
-              className="w-full px-3.5 py-2 bg-surface-container-low border border-[#C2C8C0] focus:border-primary rounded-xs text-sm text-[#1A1C1E] focus:outline-none"
+              className="w-full px-3.5 py-2 bg-[#141715] border border-[#28302A] focus:border-[#4B7A58] rounded-xs text-sm text-[#EFF1EC] focus:outline-none placeholder-[#5A635B]"
               autoComplete="off"
             />
 
             {/* Food Library Autocomplete Dropdown */}
             {showSuggestions && suggestions.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-[#C2C8C0] rounded-xs shadow-card z-50 overflow-hidden divide-y divide-[#E3E2E6] max-h-60 overflow-y-auto">
-                <div className="px-3 py-1.5 bg-surface-container-low text-[10px] uppercase font-bold text-outline">
+              <div className="absolute top-full left-0 right-0 mt-1 bg-[#181C19] border border-[#28302A] rounded-xs shadow-card z-50 overflow-hidden divide-y divide-[#222824] max-h-60 overflow-y-auto">
+                <div className="px-3 py-1.5 bg-[#141715] text-[10px] font-mono uppercase font-bold text-[#8E968F]">
                   Library Suggestions
                 </div>
                 {suggestions.map((item) => (
@@ -391,17 +391,17 @@ export default function GroceryListPage() {
                       if (item.defaultUnit) setUnit(item.defaultUnit);
                       setShowSuggestions(false);
                     }}
-                    className="w-full px-3 py-2 text-left hover:bg-[#FAF9FC] flex items-center justify-between text-xs cursor-pointer transition-colors"
+                    className="w-full px-3 py-2 text-left hover:bg-[#1E2420] flex items-center justify-between text-xs cursor-pointer transition-colors"
                   >
                     <div>
-                      <span className="font-semibold text-[#1A1C1E]">{item.name}</span>
+                      <span className="font-serif font-bold text-sm text-[#EFF1EC]">{item.name}</span>
                       {item.aliases.length > 0 && (
-                        <span className="text-[10px] text-outline ml-1.5">
+                        <span className="text-[10px] font-sans text-[#8E968F] ml-1.5">
                           ({item.aliases.slice(0, 2).join(', ')})
                         </span>
                       )}
                     </div>
-                    <span className="text-[10px] text-outline font-medium px-1.5 py-0.5 rounded-xs bg-surface-container">
+                    <span className="text-[10px] font-mono text-[#8E968F] px-1.5 py-0.5 rounded-xs bg-[#222824] border border-[#2B342D]">
                       {item.category}
                     </span>
                   </button>
@@ -421,7 +421,7 @@ export default function GroceryListPage() {
                 value={quantity}
                 onChange={(e) => setQuantity(e.target.value)}
                 placeholder="Qty"
-                className="w-full px-2.5 py-2 bg-surface-container-low border border-[#C2C8C0] focus:border-primary rounded-xs text-sm text-[#1A1C1E] text-center focus:outline-none"
+                className="w-full px-2.5 py-2 bg-[#141715] border border-[#28302A] focus:border-[#4B7A58] rounded-xs text-sm text-[#EFF1EC] text-center focus:outline-none font-mono"
               />
             </div>
             <div className="w-1/2">
@@ -430,7 +430,7 @@ export default function GroceryListPage() {
                 id="grocery-unit"
                 value={unit}
                 onChange={(e) => setUnit(e.target.value)}
-                className="w-full px-1.5 py-2 bg-surface-container-low border border-[#C2C8C0] focus:border-primary rounded-xs text-xs text-[#1A1C1E] focus:outline-none"
+                className="w-full px-1.5 py-2 bg-[#141715] border border-[#28302A] focus:border-[#4B7A58] rounded-xs text-xs text-[#EFF1EC] focus:outline-none font-mono cursor-pointer"
               >
                 <option value="pcs">pcs</option>
                 <option value="g">g</option>
@@ -449,7 +449,7 @@ export default function GroceryListPage() {
               id="grocery-cat"
               value={category}
               onChange={(e) => setCategory(e.target.value as FoodCategory)}
-              className="w-full px-3 py-2 bg-surface-container-low border border-[#C2C8C0] focus:border-primary rounded-xs text-sm text-[#1A1C1E] focus:outline-none"
+              className="w-full px-3 py-2 bg-[#141715] border border-[#28302A] focus:border-[#4B7A58] rounded-xs text-sm text-[#EFF1EC] focus:outline-none cursor-pointer"
             >
               {CATEGORIES.map((c) => (
                 <option key={c} value={c}>{c}</option>
@@ -460,7 +460,7 @@ export default function GroceryListPage() {
           <div className="sm:col-span-2">
             <button
               type="submit"
-              className="w-full h-full min-h-[40px] px-4 py-2 bg-primary hover:bg-primary-hover text-white text-xs sm:text-sm font-semibold rounded-xs shadow-subtle transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
+              className="w-full h-full min-h-[40px] px-4 py-2 bg-[#3B6647] hover:bg-[#467854] text-[#EFF1EC] text-xs font-mono uppercase tracking-wider font-medium rounded-xs border border-[#4E805B]/30 shadow-subtle transition-colors flex items-center justify-center gap-1.5 cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Add</span>
@@ -471,13 +471,13 @@ export default function GroceryListPage() {
 
       {/* Category Filter Pills */}
       {toBuyItems.length > 0 && (
-        <div className="flex items-center gap-2 overflow-x-auto pb-3 mb-6 no-scrollbar">
+        <div className="flex items-center gap-1.5 overflow-x-auto pb-3 mb-6 no-scrollbar">
           <button
             onClick={() => setSelectedCategory('All')}
-            className={`px-3 py-1.5 rounded-xs text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+            className={`px-3 py-1.5 rounded-xs font-mono text-xs whitespace-nowrap transition-colors border cursor-pointer ${
               selectedCategory === 'All'
-                ? 'bg-primary text-white'
-                : 'bg-white text-on-surface-variant border border-[#E3E2E6] hover:bg-surface-container'
+                ? 'bg-[#222824] text-[#EFF1EC] border-[#323D35] font-bold'
+                : 'bg-[#1C211D] text-[#8E968F] hover:text-[#EFF1EC] border-[#28302A]'
             }`}
           >
             All Items ({toBuyItems.length})
@@ -488,10 +488,10 @@ export default function GroceryListPage() {
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-3 py-1.5 rounded-xs text-xs font-semibold whitespace-nowrap transition-colors cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xs font-mono text-xs whitespace-nowrap transition-colors border cursor-pointer ${
                   selectedCategory === cat
-                    ? 'bg-primary text-white'
-                    : 'bg-white text-on-surface-variant border border-[#E3E2E6] hover:bg-surface-container'
+                    ? 'bg-[#222824] text-[#EFF1EC] border-[#323D35] font-bold'
+                    : 'bg-[#1C211D] text-[#8E968F] hover:text-[#EFF1EC] border-[#28302A]'
                 }`}
               >
                 {cat} ({count})
@@ -502,36 +502,36 @@ export default function GroceryListPage() {
       )}
 
       {/* TO BUY SECTION */}
-      <section className="bg-white rounded-xs border border-[#E3E2E6] shadow-subtle mb-8 overflow-hidden">
-        <div className="p-4 sm:p-5 border-b border-[#E3E2E6] bg-surface-container-low flex items-center justify-between">
+      <section className="bg-[#181C19] rounded-sm border border-[#28302A] mb-8 overflow-hidden">
+        <div className="p-4 sm:p-5 border-b border-[#28302A] bg-[#141715] flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <ShoppingCart className="w-4 h-4 text-primary" />
-            <h2 className="font-serif font-bold text-xl text-[#1A1C1E]">To Buy</h2>
-            <span className="text-xs px-2 py-0.5 rounded-xs bg-[#FFDBD0] text-[#97472E] font-bold">
+            <ShoppingCart className="w-4 h-4 text-[#78B48B]" />
+            <h2 className="font-serif font-bold text-xl text-[#EFF1EC]">To Buy</h2>
+            <span className="text-xs font-mono px-2 py-0.5 rounded-xs bg-[#2D1915] text-[#FF9E90] border border-[#482520] font-bold">
               {filteredToBuy.length}
             </span>
           </div>
-          <span className="text-xs text-outline hidden sm:inline">
+          <span className="text-xs font-mono text-[#5A635B] hidden sm:inline">
             Click checkbox when purchased to transfer to pantry
           </span>
         </div>
 
         {filteredToBuy.length > 0 ? (
-          <ul className="divide-y divide-[#E3E2E6]">
+          <ul className="divide-y divide-[#222824]">
             {filteredToBuy.map((item) => (
               <li
                 key={item.id}
-                className="p-4 sm:p-5 hover:bg-[#FAF9FC] transition-colors flex items-start sm:items-center justify-between gap-3 group"
+                className="p-4 sm:p-5 hover:bg-[#1E2420]/50 transition-colors flex items-start sm:items-center justify-between gap-3 group"
               >
                 <div className="flex items-center gap-3.5 flex-1 min-w-0">
-                  {/* Thumb-friendly Checkbox */}
+                  {/* Checkbox */}
                   <button
                     type="button"
                     onClick={() => handleToggle(item.id)}
-                    className={`w-7 h-7 rounded-lg border-2 flex items-center justify-center transition-all shrink-0 cursor-pointer ${
+                    className={`w-6 h-6 rounded-xs border flex items-center justify-center transition-colors shrink-0 cursor-pointer ${
                       item.checked
-                        ? 'bg-primary border-primary text-white'
-                        : 'border-[#D5D9D4] hover:border-primary bg-white'
+                        ? 'bg-[#3B6647] border-[#4E805B] text-[#EFF1EC]'
+                        : 'border-[#3A453D] hover:border-[#78B48B] bg-[#141715]'
                     }`}
                     aria-label={`Mark ${item.name} as purchased`}
                   >
@@ -540,18 +540,18 @@ export default function GroceryListPage() {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="font-bold text-sm sm:text-base text-[#191C1B]">{item.name}</span>
-                      <span className="text-xs font-semibold px-2 py-0.5 rounded-full bg-[#F2F4F1] text-[#2A2F2D]">
+                      <span className="font-serif font-bold text-sm sm:text-base text-[#EFF1EC]">{item.name}</span>
+                      <span className="text-xs font-mono px-2 py-0.5 rounded-xs bg-[#222824] text-[#C4CCC4] border border-[#2B342D]">
                         {item.quantity} {item.unit}
                       </span>
                       {/* Priority Tag */}
                       <span
-                        className={`text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full ${
+                        className={`text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-xs border ${
                           item.source === 'recipe' || (item.recipeName && item.recipeName.length > 0)
-                            ? 'bg-[#FFDBD0] text-[#97472E]'
+                            ? 'bg-[#2D1915] text-[#FF9E90] border-[#482520]'
                             : item.source === 'pantry_restock'
-                            ? 'bg-[#FEF3C7] text-[#92400E]'
-                            : 'bg-[#E3F2E9] text-primary'
+                            ? 'bg-[#282115] text-[#E5B567] border-[#453620]'
+                            : 'bg-[#16261B] text-[#78B48B] border-[#243F2C]'
                         }`}
                       >
                         {item.source === 'recipe' || (item.recipeName && item.recipeName.length > 0)
@@ -562,21 +562,21 @@ export default function GroceryListPage() {
                       </span>
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-[#5F6762]">
+                    <div className="flex flex-wrap items-center gap-2 mt-1 text-[11px] text-[#8E968F]">
                       {item.source === 'recipe' && item.recipeName && (
-                        <span className="inline-flex items-center gap-1 text-primary font-medium">
+                        <span className="inline-flex items-center gap-1 text-[#78B48B] font-mono text-[10px]">
                           <Sparkles className="w-3 h-3" />
                           <span>Needed for {item.recipeName}</span>
                         </span>
                       )}
                       {item.source === 'pantry_restock' && (
-                        <span className="inline-flex items-center gap-1 text-primary font-medium">
+                        <span className="inline-flex items-center gap-1 text-[#78B48B] font-mono text-[10px]">
                           <Package className="w-3 h-3" />
                           <span>Restock staple</span>
                         </span>
                       )}
                       {item.notes && item.source === 'manual' && (
-                        <span className="text-[#8A928D] italic">{item.notes}</span>
+                        <span className="text-[#5A635B] font-sans italic">{item.notes}</span>
                       )}
                     </div>
                   </div>
@@ -589,7 +589,7 @@ export default function GroceryListPage() {
                     deleteGroceryItem(item.id);
                     showToast(`Removed "${item.name}" from shopping list.`);
                   }}
-                  className="p-1.5 text-outline hover:text-[#BA1A1A] hover:bg-red-50 rounded-xs transition-colors shrink-0 cursor-pointer"
+                  className="p-1.5 text-[#5A635B] hover:text-[#E06C6C] hover:bg-[#2A1D1C] rounded-xs transition-colors shrink-0 cursor-pointer"
                   aria-label={`Delete ${item.name}`}
                   title="Remove from list"
                 >
@@ -599,18 +599,18 @@ export default function GroceryListPage() {
             ))}
           </ul>
         ) : (
-          <div className="p-8 text-center">
-            <CheckCircle2 className="w-10 h-10 text-primary mx-auto mb-2.5 stroke-[1.5]" />
-            <h3 className="font-serif font-bold text-lg text-[#1A1C1E]">
+          <div className="p-8 sm:p-12 text-center">
+            <CheckCircle2 className="w-10 h-10 text-[#78B48B] mx-auto mb-2.5 stroke-[1.5]" />
+            <h3 className="font-serif font-bold text-lg text-[#EFF1EC]">
               {selectedCategory === 'All' ? 'No items on your shopping list' : `No items in ${selectedCategory}`}
             </h3>
-            <p className="text-xs sm:text-sm text-on-surface-variant mt-1 max-w-md mx-auto leading-relaxed">
+            <p className="text-xs sm:text-sm text-[#8E968F] font-sans mt-1 max-w-md mx-auto leading-relaxed">
               Add staples manually above, restock items from your pantry, or add missing ingredients directly from any recipe.
             </p>
             <div className="mt-4 flex items-center justify-center gap-3">
               <Link
                 href="/recipes"
-                className="inline-flex items-center gap-1 text-xs font-semibold text-primary hover:underline"
+                className="inline-flex items-center gap-1 text-xs font-mono uppercase tracking-wider text-[#78B48B] hover:underline"
               >
                 <span>Find recipe ingredients</span>
                 <ArrowRight className="w-3.5 h-3.5" />
@@ -622,25 +622,25 @@ export default function GroceryListPage() {
 
       {/* PURCHASED SECTION */}
       {purchasedItems.length > 0 && (
-        <section className="bg-white rounded-xs border border-[#E3E2E6] shadow-subtle overflow-hidden">
-          <div className="p-4 sm:p-5 border-b border-[#E3E2E6] bg-surface-container-low flex items-center justify-between">
+        <section className="bg-[#181C19] rounded-sm border border-[#28302A] overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-[#28302A] bg-[#141715] flex items-center justify-between">
             <button
               type="button"
               onClick={() => setShowPurchased(!showPurchased)}
-              className="flex items-center gap-2 text-left font-serif font-bold text-lg text-[#1A1C1E] hover:text-primary transition-colors cursor-pointer"
+              className="flex items-center gap-2 text-left font-serif font-bold text-lg text-[#EFF1EC] hover:text-[#78B48B] transition-colors cursor-pointer"
             >
               <span>Purchased & Added to Pantry ({purchasedItems.length})</span>
               {showPurchased ? (
-                <ChevronUp className="w-4 h-4 text-outline" />
+                <ChevronUp className="w-4 h-4 text-[#8E968F]" />
               ) : (
-                <ChevronDown className="w-4 h-4 text-outline" />
+                <ChevronDown className="w-4 h-4 text-[#8E968F]" />
               )}
             </button>
 
             <button
               type="button"
               onClick={() => setIsConfirmingClear(true)}
-              className="inline-flex items-center gap-1 text-xs font-semibold text-outline hover:text-[#BA1A1A] transition-colors px-2 py-1 rounded-xs hover:bg-red-50 cursor-pointer"
+              className="inline-flex items-center gap-1 text-xs font-mono text-[#8E968F] hover:text-[#E06C6C] transition-colors px-2 py-1 rounded-xs hover:bg-[#2A1D1C] cursor-pointer"
             >
               <Trash2 className="w-3.5 h-3.5" />
               <span>Clear purchased</span>
@@ -648,18 +648,18 @@ export default function GroceryListPage() {
           </div>
 
           {showPurchased && (
-            <ul className="divide-y divide-[#E3E2E6] bg-[#FAF9FC]">
+            <ul className="divide-y divide-[#222824] bg-[#141715]">
               {purchasedItems.map((item) => (
                 <li
                   key={item.id}
-                  className="p-4 sm:p-5 flex items-center justify-between gap-3 text-on-surface-variant"
+                  className="p-4 sm:p-5 flex items-center justify-between gap-3 text-[#8E968F]"
                 >
                   <div className="flex items-center gap-3.5 flex-1 min-w-0">
                     {/* Uncheck button */}
                     <button
                       type="button"
                       onClick={() => handleToggle(item.id)}
-                      className="w-5 h-5 rounded-xs bg-primary text-white flex items-center justify-center shrink-0 cursor-pointer"
+                      className="w-5 h-5 rounded-xs bg-[#3B6647] text-[#EFF1EC] flex items-center justify-center shrink-0 cursor-pointer"
                       title="Uncheck (item remains in pantry)"
                     >
                       <Check className="w-3.5 h-3.5 stroke-[3]" />
@@ -667,18 +667,18 @@ export default function GroceryListPage() {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-semibold text-base line-through text-outline">
+                        <span className="font-serif font-semibold text-base line-through text-[#5A635B]">
                           {item.name}
                         </span>
-                        <span className="text-xs text-outline line-through">
+                        <span className="text-xs font-mono text-[#5A635B] line-through">
                           {item.quantity} {item.unit}
                         </span>
-                        <span className="text-[10px] font-bold px-1.5 py-0.2 rounded-xs bg-primary-fixed text-primary">
+                        <span className="text-[10px] font-mono font-bold px-1.5 py-0.2 rounded-xs bg-[#1A261E] text-[#78B48B] border border-[#273B2E]">
                           In Pantry
                         </span>
                       </div>
                       {item.checkedAt && (
-                        <span className="text-[11px] text-outline block mt-0.5">
+                        <span className="text-[11px] font-mono text-[#5A635B] block mt-0.5">
                           Ticked {new Date(item.checkedAt).toLocaleDateString()}
                         </span>
                       )}
@@ -691,7 +691,7 @@ export default function GroceryListPage() {
                       deleteGroceryItem(item.id);
                       showToast(`Removed "${item.name}".`);
                     }}
-                    className="p-1.5 text-outline hover:text-[#BA1A1A] hover:bg-red-50 rounded-xs transition-colors shrink-0 cursor-pointer"
+                    className="p-1.5 text-[#5A635B] hover:text-[#E06C6C] hover:bg-[#2A1D1C] rounded-xs transition-colors shrink-0 cursor-pointer"
                     aria-label={`Delete ${item.name}`}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -712,16 +712,16 @@ export default function GroceryListPage() {
       >
         {duplicateData && (
           <div className="space-y-4 py-2">
-            <div className="p-3.5 bg-surface-container-low rounded-xs border border-[#E3E2E6] text-xs sm:text-sm">
-              <p className="text-[#1A1C1E] leading-relaxed">
+            <div className="p-3.5 bg-[#141715] rounded-xs border border-[#28302A] text-xs sm:text-sm">
+              <p className="text-[#EFF1EC] leading-relaxed">
                 You currently have{' '}
-                <strong className="text-primary font-bold">
+                <strong className="text-[#78B48B] font-mono font-bold">
                   {duplicateData.existingPantryItem.quantity} {duplicateData.existingPantryItem.unit}
                 </strong>{' '}
-                of <strong className="text-[#1A1C1E]">{duplicateData.existingPantryItem.name}</strong> in your pantry ({duplicateData.existingPantryItem.storageLocation}).
+                of <strong className="text-[#EFF1EC]">{duplicateData.existingPantryItem.name}</strong> in your pantry ({duplicateData.existingPantryItem.storageLocation}).
               </p>
-              <p className="text-on-surface-variant mt-2">
-                You just bought <strong className="text-[#1A1C1E]">{duplicateData.groceryItem.quantity} {duplicateData.groceryItem.unit}</strong> of {duplicateData.groceryItem.name}.
+              <p className="text-[#8E968F] mt-2 font-sans">
+                You just bought <strong className="text-[#EFF1EC] font-mono">{duplicateData.groceryItem.quantity} {duplicateData.groceryItem.unit}</strong> of {duplicateData.groceryItem.name}.
                 How would you like to update your kitchen stock?
               </p>
             </div>
@@ -730,18 +730,18 @@ export default function GroceryListPage() {
               <button
                 type="button"
                 onClick={() => handleResolveChoice('merge')}
-                className="w-full p-3.5 text-left rounded-xs border-2 border-primary bg-[#FAF9FC] hover:bg-[#C7ECCE]/20 transition-all flex items-start gap-3 cursor-pointer group"
+                className="w-full p-3.5 text-left rounded-xs border border-[#3B6647] bg-[#16261B] hover:bg-[#1C3224] transition-colors flex items-start gap-3 cursor-pointer group"
               >
-                <div className="w-8 h-8 rounded-xs bg-primary text-white flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-xs bg-[#3B6647] text-[#EFF1EC] flex items-center justify-center shrink-0 mt-0.5">
                   <Layers className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="font-bold text-sm text-[#1A1C1E] group-hover:text-primary">
+                  <div className="font-bold text-sm text-[#EFF1EC] group-hover:text-[#93D4A8]">
                     Add to existing item (Merge quantities)
                   </div>
-                  <div className="text-xs text-on-surface-variant mt-0.5">
+                  <div className="text-xs text-[#8E968F] mt-0.5 font-sans">
                     Updates existing {duplicateData.existingPantryItem.name} to{' '}
-                    <strong>
+                    <strong className="text-[#EFF1EC] font-mono">
                       {Number((duplicateData.existingPantryItem.quantity + (duplicateData.groceryItem.quantity || 1)).toFixed(1))}{' '}
                       {duplicateData.existingPantryItem.unit}
                     </strong>
@@ -753,27 +753,27 @@ export default function GroceryListPage() {
               <button
                 type="button"
                 onClick={() => handleResolveChoice('separate')}
-                className="w-full p-3.5 text-left rounded-xs border border-[#C2C8C0] hover:border-[#1A1C1E] bg-white transition-all flex items-start gap-3 cursor-pointer group"
+                className="w-full p-3.5 text-left rounded-xs border border-[#28302A] hover:border-[#38463B] bg-[#141715] transition-colors flex items-start gap-3 cursor-pointer group"
               >
-                <div className="w-8 h-8 rounded-xs bg-surface-container text-[#1A1C1E] flex items-center justify-center shrink-0 mt-0.5">
+                <div className="w-8 h-8 rounded-xs bg-[#1E2420] text-[#8E968F] flex items-center justify-center shrink-0 mt-0.5">
                   <Package className="w-4 h-4" />
                 </div>
                 <div>
-                  <div className="font-bold text-sm text-[#1A1C1E]">
+                  <div className="font-bold text-sm text-[#EFF1EC]">
                     Keep as a separate item (New batch)
                   </div>
-                  <div className="text-xs text-on-surface-variant mt-0.5">
+                  <div className="text-xs text-[#8E968F] mt-0.5 font-sans">
                     Creates a second entry with its own fresh shelf-life date and storage location.
                   </div>
                 </div>
               </button>
             </div>
 
-            <div className="pt-3 border-t border-[#E3E2E6] flex justify-end">
+            <div className="pt-3 border-t border-[#28302A] flex justify-end">
               <button
                 type="button"
                 onClick={() => setDuplicateData(null)}
-                className="px-4 py-2 text-xs font-semibold text-on-surface-variant hover:text-[#1A1C1E] rounded-xs"
+                className="px-4 py-2 text-xs font-mono text-[#8E968F] hover:text-[#EFF1EC] rounded-xs cursor-pointer"
               >
                 Cancel
               </button>
@@ -790,7 +790,7 @@ export default function GroceryListPage() {
         maxWidth="sm"
       >
         <div className="py-2 space-y-4 text-xs sm:text-sm">
-          <p className="text-[#1A1C1E] leading-relaxed">
+          <p className="text-[#EFF1EC] font-sans leading-relaxed">
             This will remove all {purchasedItems.length} purchased items from your shopping list.
             The items that were transferred to your pantry will remain safely in your pantry inventory.
           </p>
@@ -799,7 +799,7 @@ export default function GroceryListPage() {
             <button
               type="button"
               onClick={() => setIsConfirmingClear(false)}
-              className="px-3.5 py-2 bg-surface-container hover:bg-surface-container-high text-[#1A1C1E] text-xs font-medium rounded-xs min-h-[36px] cursor-pointer"
+              className="px-3.5 py-2 bg-[#1E2420] hover:bg-[#262E28] text-[#EFF1EC] text-xs font-mono rounded-xs min-h-[36px] cursor-pointer border border-[#28302A]"
             >
               Keep List
             </button>
@@ -810,7 +810,7 @@ export default function GroceryListPage() {
                 setIsConfirmingClear(false);
                 showToast('Cleared purchased items from shopping list.');
               }}
-              className="px-3.5 py-2 bg-[#BA1A1A] hover:bg-red-800 text-white text-xs font-semibold rounded-xs min-h-[36px] cursor-pointer"
+              className="px-3.5 py-2 bg-[#BA1A1A] hover:bg-red-800 text-white text-xs font-mono uppercase tracking-wider font-semibold rounded-xs min-h-[36px] cursor-pointer"
             >
               Clear Completed
             </button>

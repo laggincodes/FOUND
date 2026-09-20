@@ -60,39 +60,42 @@ export default function AboutPage() {
 
       {/* Editorial Headline */}
       <div className="mt-6 mb-12">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-earth-100 text-ink text-xs font-semibold mb-4">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-xs bg-[#16261B] text-[#86EFAC] text-[10px] font-mono uppercase tracking-widest border border-[#23432B] mb-4">
           <span>The Philosophy</span>
         </div>
-        <h1 className="font-serif text-3xl sm:text-5xl font-extrabold text-ink tracking-tight leading-tight">
-          Food shouldn&apos;t become waste just because we forgot about it.
+        <h1 className="font-serif text-3xl sm:text-5xl font-extrabold text-[#EFF1EC] tracking-tight leading-tight">
+          Food and goods shouldn&apos;t be wasted just because we forgot about them.
         </h1>
-        <p className="text-base sm:text-xl text-ink-muted mt-5 leading-relaxed font-normal">
-          Most food in homes isn&apos;t thrown away because people don&apos;t care. It gets pushed to the
-          back of the vegetable crisper, hidden behind new jars, or forgotten once opened.
-          Basic apps track dates. Use It First helps you make the next decision:
-          <strong className="text-ink font-semibold"> What should I cook with right now?</strong>
+        <p className="text-base sm:text-xl text-[#8E968F] mt-5 leading-relaxed font-normal">
+          Most items in homes aren&apos;t wasted because people don&apos;t care. They get pushed to the
+          back of the pantry, hidden behind new purchases, or forgotten once opened.
+          Basic apps track dates. FOUND gives your stuff a memory and answers two questions:
+          <strong className="text-[#EFF1EC] font-serif"> Do I already have this?</strong> and
+          <strong className="text-[#EFF1EC] font-serif"> What should I cook with right now?</strong>
         </p>
       </div>
 
       {/* The 5-Step Loop */}
-      <section className="bg-white rounded-3xl p-6 sm:p-10 border border-surface-border shadow-soft mb-12">
-        <h2 className="font-serif font-bold text-2xl text-ink mb-8">
-          The 5-Step Culinary Loop
+      <section className="bg-[#181C19] rounded-xs p-6 sm:p-10 border border-[#28302A] mb-12">
+        <div className="text-[10px] font-mono tracking-widest text-[#8E968F] uppercase mb-1">
+          Operating Model
+        </div>
+        <h2 className="font-serif font-bold text-2xl text-[#EFF1EC] mb-8">
+          The 5-Step Culinary &amp; Inventory Loop
         </h2>
 
         <div className="space-y-8">
           {steps.map((step) => {
-            const Icon = step.icon;
             return (
               <div key={step.num} className="flex items-start gap-4 sm:gap-6 group">
-                <div className="w-12 h-12 rounded-2xl bg-earth-100 text-[#C84B31] font-serif font-bold text-base flex items-center justify-center shrink-0 border border-surface-border">
+                <div className="w-12 h-12 rounded-xs bg-[#141715] text-[#86EFAC] font-mono font-bold text-sm flex items-center justify-center shrink-0 border border-[#28302A]">
                   {step.num}
                 </div>
                 <div>
-                  <h3 className="font-serif font-bold text-lg sm:text-xl text-ink">
+                  <h3 className="font-serif font-bold text-lg sm:text-xl text-[#EFF1EC]">
                     {step.title}
                   </h3>
-                  <p className="text-xs sm:text-sm text-ink-muted mt-1.5 leading-relaxed max-w-2xl">
+                  <p className="text-xs sm:text-sm text-[#8E968F] mt-1.5 leading-relaxed max-w-2xl">
                     {step.description}
                   </p>
                 </div>
@@ -102,29 +105,29 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Grounded Principles (No fake founders/companies/awards) */}
-      <section className="p-6 sm:p-8 rounded-2xl bg-earth-100/70 border border-surface-border mb-12">
-        <h2 className="font-serif font-bold text-xl text-ink mb-3">Our Core Principles</h2>
-        <ul className="space-y-3 text-xs sm:text-sm text-ink-muted leading-relaxed">
+      {/* Grounded Principles */}
+      <section className="p-6 sm:p-8 rounded-xs bg-[#141715] border border-[#28302A] mb-12">
+        <h2 className="font-serif font-bold text-xl text-[#EFF1EC] mb-3">Our Core Principles</h2>
+        <ul className="space-y-3 text-xs sm:text-sm text-[#8E968F] leading-relaxed">
           <li className="flex items-start gap-2.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C84B31] mt-2 shrink-0"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3B6647] mt-2 shrink-0"></span>
             <span>
-              <strong className="text-ink font-semibold">Planning, not policing: </strong>
-              We calculate practical kitchen urgency, not food-safety certifications. We never make pseudo-scientific
-              guarantees about food safety.
+              <strong className="text-[#EFF1EC]">Planning, not policing: </strong>
+              We calculate practical kitchen urgency and durable possession tracking, not food-safety certifications.
+              We never make pseudo-scientific guarantees.
             </span>
           </li>
           <li className="flex items-start gap-2.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C84B31] mt-2 shrink-0"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3B6647] mt-2 shrink-0"></span>
             <span>
-              <strong className="text-ink font-semibold">Honest automation: </strong>
+              <strong className="text-[#EFF1EC]">Honest automation: </strong>
               When scanning a photo, we identify recognizable items and ask you to confirm details. We never pretend an image can know an expiration date or opened state.
             </span>
           </li>
           <li className="flex items-start gap-2.5">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#C84B31] mt-2 shrink-0"></span>
+            <span className="w-1.5 h-1.5 rounded-full bg-[#3B6647] mt-2 shrink-0"></span>
             <span>
-              <strong className="text-ink font-semibold">Start with what you have: </strong>
+              <strong className="text-[#EFF1EC]">Start with what you have: </strong>
               Cooking shouldn&apos;t require buying ten new exotic ingredients just to make dinner. Recipes should start from what is already in your cupboards.
             </span>
           </li>
@@ -132,24 +135,24 @@ export default function AboutPage() {
       </section>
 
       {/* CTA Box */}
-      <div className="text-center bg-white p-8 rounded-2xl border border-surface-border shadow-soft">
-        <h3 className="font-serif font-bold text-2xl text-ink mb-2">
-          Ready to make use of your kitchen?
+      <div className="text-center bg-[#181C19] p-8 rounded-xs border border-[#28302A]">
+        <h3 className="font-serif font-bold text-2xl text-[#EFF1EC] mb-2">
+          Ready to make use of your kitchen and home?
         </h3>
-        <p className="text-xs sm:text-sm text-ink-muted mb-6">
+        <p className="text-xs sm:text-sm text-[#8E968F] mb-6">
           Check your prioritized inventory or add your first ingredients right now.
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
           <Link
             href="/priority"
-            className="w-full sm:w-auto px-6 py-3 bg-[#C84B31] hover:bg-[#b03e26] text-white font-semibold text-sm rounded-xl transition-colors min-h-[44px] flex items-center justify-center gap-2"
+            className="w-full sm:w-auto px-6 py-3 bg-[#3B6647] hover:bg-[#467854] text-[#EFF1EC] font-mono text-xs uppercase tracking-wider rounded-xs border border-[#4E805B]/30 transition-colors min-h-[44px] flex items-center justify-center gap-2"
           >
             <span>What Should I Use First?</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
           <Link
             href="/pantry"
-            className="w-full sm:w-auto px-5 py-3 bg-earth-100 hover:bg-earth-200 text-ink font-medium text-sm rounded-xl transition-colors min-h-[44px] flex items-center justify-center"
+            className="w-full sm:w-auto px-5 py-3 bg-[#1E2420] hover:bg-[#262E28] text-[#EFF1EC] font-mono text-xs uppercase tracking-wider border border-[#28302A] rounded-xs transition-colors min-h-[44px] flex items-center justify-center"
           >
             <span>Open My Pantry</span>
           </Link>

@@ -42,21 +42,21 @@ export const ToastProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         {toasts.map((toast) => (
           <div
             key={toast.id}
-            className="pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 bg-[#1A1C1E] text-white rounded-md shadow-elevated border border-white/10 text-xs sm:text-sm font-medium animate-in slide-in-from-bottom-2 duration-200"
+            className="pointer-events-auto flex items-center justify-between gap-3 px-4 py-3 bg-[#181C19] text-[#EFF1EC] rounded-xs shadow-elevated border border-[#28302A] text-xs font-mono animate-in slide-in-from-bottom-2 duration-200"
           >
             <div className="flex items-center gap-2">
               {toast.type === 'error' ? (
-                <AlertCircle className="w-4 h-4 text-[#FFDBD0] shrink-0" />
+                <AlertCircle className="w-4 h-4 text-[#F87171] shrink-0" />
               ) : toast.type === 'info' ? (
-                <Info className="w-4 h-4 text-[#C7ECCE] shrink-0" />
+                <Info className="w-4 h-4 text-[#8E968F] shrink-0" />
               ) : (
-                <CheckCircle2 className="w-4 h-4 text-[#C7ECCE] shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-[#86EFAC] shrink-0" />
               )}
               <span>{toast.message}</span>
             </div>
             <button
               onClick={() => removeToast(toast.id)}
-              className="text-white/60 hover:text-white p-1"
+              className="text-[#8E968F] hover:text-[#EFF1EC] p-1 transition-colors"
               aria-label="Dismiss notification"
             >
               <X className="w-3.5 h-3.5" />

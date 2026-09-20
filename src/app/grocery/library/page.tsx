@@ -119,11 +119,11 @@ export default function FoodLibraryPage() {
     return (
       <div className="container mx-auto px-4 sm:px-6 py-8 max-w-6xl">
         <div className="animate-pulse space-y-6">
-          <div className="h-6 w-32 bg-earth-200 rounded"></div>
-          <div className="h-10 w-64 bg-earth-200 rounded"></div>
+          <div className="h-6 w-32 bg-[#181C19] border border-[#28302A] rounded-xs"></div>
+          <div className="h-10 w-64 bg-[#181C19] border border-[#28302A] rounded-xs"></div>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => (
-              <div key={i} className="h-28 bg-earth-100 rounded-xl"></div>
+              <div key={i} className="h-28 bg-[#181C19] border border-[#28302A] rounded-xs"></div>
             ))}
           </div>
         </div>
@@ -142,32 +142,35 @@ export default function FoodLibraryPage() {
       />
 
       {/* Header & Sub-Navigation Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-surface-border pb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-[#28302A] pb-5">
         <div>
-          <h1 className="font-serif font-bold text-3xl text-ink tracking-tight">
+          <div className="text-[11px] font-mono tracking-widest text-[#8E968F] uppercase mb-1">
+            Reference Catalog &amp; Restock
+          </div>
+          <h1 className="font-serif font-bold text-3xl sm:text-4xl text-[#EFF1EC] tracking-tight">
             Food Library
           </h1>
-          <p className="text-sm text-ink-muted mt-1">
+          <p className="text-sm text-[#8E968F] mt-1">
             Discover household staples, check pantry stock, and quickly restock your list.
           </p>
         </div>
 
         {/* Segmented Sub-Nav: Shopping List <-> Food Library */}
-        <div className="inline-flex p-1 bg-earth-100 rounded-xl border border-surface-border text-xs font-semibold self-start sm:self-auto">
+        <div className="inline-flex p-1 bg-[#141715] rounded-xs border border-[#28302A] text-xs font-mono self-start sm:self-auto">
           <Link
             href="/grocery"
-            className="px-4 py-2 rounded-lg text-ink-muted hover:text-ink transition-colors flex items-center gap-1.5"
+            className="px-4 py-2 rounded-xs text-[#8E968F] hover:text-[#EFF1EC] transition-colors flex items-center gap-1.5"
           >
             <ShoppingCart className="w-3.5 h-3.5" />
             Shopping List
             {groceryItems.filter((g) => !g.checked).length > 0 && (
-              <span className="w-4 h-4 rounded-full bg-olive-700 text-white flex items-center justify-center text-[10px]">
+              <span className="w-4 h-4 rounded-full bg-[#3B6647] text-[#EFF1EC] flex items-center justify-center text-[10px]">
                 {groceryItems.filter((g) => !g.checked).length}
               </span>
             )}
           </Link>
-          <div className="px-4 py-2 rounded-lg bg-white text-ink shadow-2xs flex items-center gap-1.5 border border-surface-border/60">
-            <BookOpen className="w-3.5 h-3.5 text-olive-700" />
+          <div className="px-4 py-2 rounded-xs bg-[#1E2420] text-[#EFF1EC] flex items-center gap-1.5 border border-[#3B6647]/50 shadow-2xs">
+            <BookOpen className="w-3.5 h-3.5 text-[#86EFAC]" />
             Food Library
           </div>
         </div>
@@ -183,11 +186,11 @@ export default function FoodLibraryPage() {
           {dueSoon.length > 0 && (
             <section className="space-y-3">
               <div className="flex items-center gap-2">
-                <Clock className="w-4 h-4 text-terracotta-600" />
-                <h2 className="font-serif font-bold text-lg text-ink">
+                <Clock className="w-4 h-4 text-[#FDE047]" />
+                <h2 className="font-serif font-bold text-lg text-[#EFF1EC]">
                   May Be Due Soon
                 </h2>
-                <span className="text-xs text-terracotta-700 bg-terracotta-50 px-2 py-0.5 rounded-full border border-terracotta-200">
+                <span className="text-[10px] font-mono text-[#FDE047] bg-[#282115] px-2 py-0.5 rounded-xs border border-[#42331C] uppercase tracking-wider">
                   Cycle restock
                 </span>
               </div>
@@ -202,38 +205,38 @@ export default function FoodLibraryPage() {
                     <div
                       key={stat.foodId}
                       onClick={() => cat && handleOpenDetail(cat)}
-                      className="bg-white p-3.5 rounded-2xl border border-surface-border hover:border-earth-300 hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between"
+                      className="bg-[#181C19] p-3.5 rounded-xs border border-[#28302A] hover:border-[#3B6647]/60 transition-all cursor-pointer flex flex-col justify-between"
                     >
                       <div>
                         <div className="flex items-start justify-between gap-2">
-                          <span className="text-[11px] font-medium text-ink-muted uppercase tracking-wider">
+                          <span className="text-[10px] font-mono text-[#8E968F] uppercase tracking-wider">
                             {cat?.category || 'Pantry'}
                           </span>
                           {inPantry && (
-                            <span className="text-[10px] text-olive-800 bg-olive-50 px-1.5 py-0.5 rounded border border-olive-200">
+                            <span className="text-[10px] font-mono text-[#86EFAC] bg-[#16261B] px-1.5 py-0.5 rounded-xs border border-[#23432B]">
                               In pantry
                             </span>
                           )}
                         </div>
-                        <h3 className="font-serif font-bold text-ink text-base mt-1">
+                        <h3 className="font-serif font-bold text-[#EFF1EC] text-base mt-1">
                           {name}
                         </h3>
-                        <p className="text-xs text-ink-muted mt-0.5">
+                        <p className="text-xs font-mono text-[#8E968F] mt-0.5">
                           Regular cycle: ~{Math.round(stat.averageDaysBetweenPurchases || 7)} days
                         </p>
                       </div>
 
-                      <div className="mt-3 pt-2.5 border-t border-surface-border/60 flex items-center justify-between">
-                        <span className="text-xs text-ink-muted">
+                      <div className="mt-3 pt-2.5 border-t border-[#28302A] flex items-center justify-between">
+                        <span className="text-xs font-mono text-[#8E968F]">
                           Avg: {stat.averageQuantity || 1} {cat?.defaultUnit || 'pack'}
                         </span>
                         <button
                           type="button"
                           onClick={(e) => cat && handleQuickAdd(e, cat)}
-                          className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors ${
+                          className={`p-1.5 rounded-xs text-xs font-mono transition-colors ${
                             isOnList
-                              ? 'bg-olive-50 text-olive-700 border border-olive-200'
-                              : 'bg-earth-100 hover:bg-olive-700 hover:text-white text-ink'
+                              ? 'bg-[#16261B] text-[#86EFAC] border border-[#23432B]'
+                              : 'bg-[#141715] hover:bg-[#3B6647] text-[#8E968F] hover:text-[#EFF1EC] border border-[#28302A]'
                           }`}
                           title={isOnList ? 'Already on list' : 'Add to shopping list'}
                         >
@@ -251,11 +254,11 @@ export default function FoodLibraryPage() {
           {frequentlyBought.length > 0 && (
             <section className="space-y-3">
               <div className="flex items-center gap-2">
-                <TrendingUp className="w-4 h-4 text-olive-700" />
-                <h2 className="font-serif font-bold text-lg text-ink">
+                <TrendingUp className="w-4 h-4 text-[#86EFAC]" />
+                <h2 className="font-serif font-bold text-lg text-[#EFF1EC]">
                   You Buy Often
                 </h2>
-                <span className="text-xs text-olive-800 bg-olive-50 px-2 py-0.5 rounded-full border border-olive-200">
+                <span className="text-[10px] font-mono text-[#86EFAC] bg-[#16261B] px-2 py-0.5 rounded-xs border border-[#23432B] uppercase tracking-wider">
                   Household staples
                 </span>
               </div>
@@ -269,27 +272,27 @@ export default function FoodLibraryPage() {
                     <div
                       key={stat.foodId}
                       onClick={() => cat && handleOpenDetail(cat)}
-                      className="bg-white p-3 rounded-xl border border-surface-border hover:border-earth-300 transition-all cursor-pointer flex flex-col justify-between"
+                      className="bg-[#181C19] p-3 rounded-xs border border-[#28302A] hover:border-[#3B6647]/60 transition-all cursor-pointer flex flex-col justify-between"
                     >
                       <div>
-                        <h3 className="font-serif font-semibold text-ink text-sm leading-tight line-clamp-1">
+                        <h3 className="font-serif font-semibold text-[#EFF1EC] text-sm leading-tight line-clamp-1">
                           {name}
                         </h3>
-                        <p className="text-[11px] text-ink-muted mt-0.5">
+                        <p className="text-[11px] font-mono text-[#8E968F] mt-0.5">
                           Bought {stat.purchaseCount}x
                         </p>
                       </div>
-                      <div className="mt-2.5 pt-2 border-t border-surface-border/60 flex items-center justify-between">
-                        <span className="text-[11px] text-ink-muted">
+                      <div className="mt-2.5 pt-2 border-t border-[#28302A] flex items-center justify-between">
+                        <span className="text-[11px] font-mono text-[#8E968F]">
                           {cat?.defaultUnit || 'pack'}
                         </span>
                         <button
                           type="button"
                           onClick={(e) => cat && handleQuickAdd(e, cat)}
-                          className={`p-1 rounded-lg text-xs transition-colors ${
+                          className={`p-1 rounded-xs text-xs font-mono transition-colors ${
                             isOnList
-                              ? 'bg-olive-50 text-olive-700'
-                              : 'bg-earth-100 hover:bg-olive-700 hover:text-white text-ink'
+                              ? 'bg-[#16261B] text-[#86EFAC] border border-[#23432B]'
+                              : 'bg-[#141715] hover:bg-[#3B6647] text-[#8E968F] hover:text-[#EFF1EC] border border-[#28302A]'
                           }`}
                         >
                           {isOnList ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
@@ -306,11 +309,11 @@ export default function FoodLibraryPage() {
           {recentlyBought.length > 0 && (
             <section className="space-y-3">
               <div className="flex items-center gap-2">
-                <History className="w-4 h-4 text-earth-600" />
-                <h2 className="font-serif font-bold text-lg text-ink">
+                <History className="w-4 h-4 text-[#8E968F]" />
+                <h2 className="font-serif font-bold text-lg text-[#EFF1EC]">
                   Recently Bought
                 </h2>
-                <span className="text-xs text-ink-muted">Quick re-add</span>
+                <span className="text-xs font-mono text-[#8E968F]">Quick re-add</span>
               </div>
               <div className="flex gap-2.5 overflow-x-auto pb-2 scrollbar-thin">
                 {recentlyBought.slice(0, 8).map((hist) => {
@@ -321,21 +324,21 @@ export default function FoodLibraryPage() {
                     <div
                       key={hist.id}
                       onClick={() => cat && handleOpenDetail(cat)}
-                      className="bg-white px-3 py-2 rounded-xl border border-surface-border hover:border-earth-300 transition-all cursor-pointer shrink-0 flex items-center gap-3 text-xs"
+                      className="bg-[#181C19] px-3 py-2 rounded-xs border border-[#28302A] hover:border-[#3B6647]/60 transition-all cursor-pointer shrink-0 flex items-center gap-3 text-xs"
                     >
                       <div>
-                        <div className="font-serif font-medium text-ink">{hist.name}</div>
-                        <div className="text-[10px] text-ink-muted">
+                        <div className="font-serif font-medium text-[#EFF1EC]">{hist.name}</div>
+                        <div className="text-[10px] font-mono text-[#8E968F]">
                           {hist.quantity} {hist.unit}
                         </div>
                       </div>
                       <button
                         type="button"
                         onClick={(e) => cat ? handleQuickAdd(e, cat) : undefined}
-                        className={`p-1.5 rounded-lg text-xs transition-colors ${
+                        className={`p-1.5 rounded-xs text-xs font-mono transition-colors ${
                           isOnList
-                            ? 'bg-olive-50 text-olive-700'
-                            : 'bg-earth-100 hover:bg-olive-700 hover:text-white text-ink'
+                            ? 'bg-[#16261B] text-[#86EFAC] border border-[#23432B]'
+                            : 'bg-[#141715] hover:bg-[#3B6647] text-[#8E968F] hover:text-[#EFF1EC] border border-[#28302A]'
                         }`}
                         title="Add to shopping list"
                       >
@@ -350,17 +353,17 @@ export default function FoodLibraryPage() {
         </div>
       ) : (
         /* SECTION FOR NEW USER: POPULAR ESSENTIALS */
-        <section className="space-y-3 bg-earth-50/50 p-5 rounded-2xl border border-surface-border">
+        <section className="space-y-3 bg-[#181C19] p-5 rounded-xs border border-[#28302A]">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-4 h-4 text-olive-700" />
-            <h2 className="font-serif font-bold text-lg text-ink">
+            <Sparkles className="w-4 h-4 text-[#86EFAC]" />
+            <h2 className="font-serif font-bold text-lg text-[#EFF1EC]">
               Popular Household Essentials
             </h2>
-            <span className="text-xs text-olive-800 bg-olive-100/70 px-2 py-0.5 rounded-full">
+            <span className="text-[10px] font-mono text-[#86EFAC] bg-[#16261B] px-2 py-0.5 rounded-xs border border-[#23432B] uppercase tracking-wider">
               Pantry starters
             </span>
           </div>
-          <p className="text-xs text-ink-muted">
+          <p className="text-xs text-[#8E968F]">
             Starting fresh? Add everyday cooking essentials to begin tracking your home stock.
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 gap-3 pt-2">
@@ -373,27 +376,27 @@ export default function FoodLibraryPage() {
                 <div
                   key={cat.id}
                   onClick={() => handleOpenDetail(cat)}
-                  className="bg-white p-3 rounded-xl border border-surface-border hover:border-earth-300 transition-all cursor-pointer flex flex-col justify-between"
+                  className="bg-[#141715] p-3 rounded-xs border border-[#28302A] hover:border-[#3B6647]/60 transition-all cursor-pointer flex flex-col justify-between"
                 >
                   <div>
-                    <h3 className="font-serif font-semibold text-ink text-sm leading-tight">
+                    <h3 className="font-serif font-semibold text-[#EFF1EC] text-sm leading-tight">
                       {cat.name}
                     </h3>
-                    <p className="text-[11px] text-ink-muted mt-0.5">
+                    <p className="text-[11px] font-mono text-[#8E968F] mt-0.5">
                       {cat.category}
                     </p>
                   </div>
-                  <div className="mt-2.5 pt-2 border-t border-surface-border/60 flex items-center justify-between">
-                    <span className="text-[11px] text-ink-muted">
+                  <div className="mt-2.5 pt-2 border-t border-[#28302A] flex items-center justify-between">
+                    <span className="text-[11px] font-mono text-[#8E968F]">
                       {cat.defaultUnit}
                     </span>
                     <button
                       type="button"
                       onClick={(e) => handleQuickAdd(e, cat)}
-                      className={`p-1 rounded-lg text-xs transition-colors ${
+                      className={`p-1 rounded-xs text-xs font-mono transition-colors ${
                         isOnList
-                          ? 'bg-olive-50 text-olive-700'
-                          : 'bg-earth-100 hover:bg-olive-700 hover:text-white text-ink'
+                          ? 'bg-[#16261B] text-[#86EFAC] border border-[#23432B]'
+                          : 'bg-[#181C19] hover:bg-[#3B6647] text-[#8E968F] hover:text-[#EFF1EC] border border-[#28302A]'
                       }`}
                     >
                       {isOnList ? <Check className="w-3 h-3" /> : <Plus className="w-3 h-3" />}
@@ -410,32 +413,32 @@ export default function FoodLibraryPage() {
       {/* BROWSE ALL FOODS & SEARCH */}
       {/* ========================================================================= */}
 
-      <section className="space-y-4 pt-4 border-t border-surface-border">
+      <section className="space-y-4 pt-4 border-t border-[#28302A]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h2 className="font-serif font-bold text-xl text-ink">
+            <h2 className="font-serif font-bold text-xl text-[#EFF1EC]">
               Browse All Foods
             </h2>
-            <p className="text-xs text-ink-muted mt-0.5">
-              Showing {filteredCatalog.length} canonical ingredients & staples
+            <p className="text-xs font-mono text-[#8E968F] mt-0.5">
+              Showing {filteredCatalog.length} canonical ingredients &amp; staples
             </p>
           </div>
 
           {/* Search Input */}
           <div className="relative w-full sm:w-72">
-            <Search className="w-4 h-4 text-ink-muted absolute left-3 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-[#8E968F] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               placeholder="Search foods, aliases, spices..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-8 py-2 bg-white border border-surface-border rounded-xl text-xs text-ink placeholder:text-ink-muted focus:outline-none focus:ring-1 focus:ring-olive-600 shadow-2xs"
+              className="w-full pl-9 pr-8 py-2 bg-[#141715] border border-[#28302A] rounded-xs text-xs text-[#EFF1EC] placeholder:text-[#5A635B] focus:outline-none focus:border-[#4B7A58]"
             />
             {searchQuery && (
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-ink-muted hover:text-ink"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#8E968F] hover:text-[#EFF1EC]"
               >
                 <X className="w-3.5 h-3.5" />
               </button>
@@ -450,10 +453,10 @@ export default function FoodLibraryPage() {
               key={cat}
               type="button"
               onClick={() => setSelectedCategory(cat)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium shrink-0 transition-all ${
+              className={`px-3 py-1.5 rounded-xs text-xs font-mono shrink-0 transition-all ${
                 selectedCategory === cat
-                  ? 'bg-ink text-white shadow-2xs'
-                  : 'bg-earth-100 hover:bg-earth-200 text-ink-muted hover:text-ink'
+                  ? 'bg-[#1E2420] text-[#EFF1EC] border border-[#3B6647]'
+                  : 'bg-[#141715] hover:bg-[#181C19] text-[#8E968F] hover:text-[#EFF1EC] border border-[#28302A]'
               }`}
             >
               {cat}
@@ -463,9 +466,9 @@ export default function FoodLibraryPage() {
 
         {/* Food Catalog Grid */}
         {filteredCatalog.length === 0 ? (
-          <div className="text-center py-12 bg-earth-50/50 rounded-2xl border border-surface-border">
-            <p className="font-serif text-ink text-base">No matching food found</p>
-            <p className="text-xs text-ink-muted mt-1">
+          <div className="text-center py-12 bg-[#181C19] rounded-xs border border-[#28302A]">
+            <p className="font-serif text-[#EFF1EC] text-base">No matching food found</p>
+            <p className="text-xs text-[#8E968F] mt-1">
               Try searching with another keyword or pick a different category.
             </p>
           </div>
@@ -479,38 +482,38 @@ export default function FoodLibraryPage() {
                 <div
                   key={food.id}
                   onClick={() => handleOpenDetail(food)}
-                  className="bg-white p-3.5 rounded-2xl border border-surface-border hover:border-earth-300 hover:shadow-xs transition-all cursor-pointer flex flex-col justify-between group"
+                  className="bg-[#181C19] p-3.5 rounded-xs border border-[#28302A] hover:border-[#3B6647]/60 transition-all cursor-pointer flex flex-col justify-between group"
                 >
                   <div>
                     <div className="flex items-start justify-between gap-1.5">
-                      <span className="text-[10px] font-medium text-ink-muted uppercase tracking-wider line-clamp-1">
+                      <span className="text-[10px] font-mono text-[#8E968F] uppercase tracking-wider line-clamp-1">
                         {food.category}
                       </span>
                       {inPantry && (
-                        <span className="text-[9px] text-olive-800 bg-olive-50 px-1.5 py-0.5 rounded border border-olive-200 shrink-0 font-medium">
+                        <span className="text-[9px] font-mono text-[#86EFAC] bg-[#16261B] px-1.5 py-0.5 rounded-xs border border-[#23432B] shrink-0 font-medium">
                           In pantry
                         </span>
                       )}
                     </div>
-                    <h3 className="font-serif font-bold text-ink text-sm mt-1 group-hover:text-olive-800 transition-colors">
+                    <h3 className="font-serif font-bold text-[#EFF1EC] text-sm mt-1 group-hover:text-[#86EFAC] transition-colors">
                       {food.name}
                     </h3>
-                    <div className="flex items-center gap-2 text-[11px] text-ink-muted mt-1.5">
+                    <div className="flex items-center gap-2 text-[11px] font-mono text-[#8E968F] mt-1.5">
                       <span>~{food.typicalShelfLifeDays}d shelf life</span>
                     </div>
                   </div>
 
-                  <div className="mt-3 pt-2.5 border-t border-surface-border/60 flex items-center justify-between">
-                    <span className="text-[11px] text-ink-muted">
+                  <div className="mt-3 pt-2.5 border-t border-[#28302A] flex items-center justify-between">
+                    <span className="text-[11px] font-mono text-[#8E968F]">
                       {food.defaultUnit}
                     </span>
                     <button
                       type="button"
                       onClick={(e) => handleQuickAdd(e, food)}
-                      className={`p-1.5 rounded-lg text-xs font-medium flex items-center gap-1 transition-colors ${
+                      className={`p-1.5 rounded-xs text-xs font-mono flex items-center gap-1 transition-colors ${
                         isOnList
-                          ? 'bg-olive-50 text-olive-700 border border-olive-200'
-                          : 'bg-earth-100 hover:bg-olive-700 hover:text-white text-ink'
+                          ? 'bg-[#16261B] text-[#86EFAC] border border-[#23432B]'
+                          : 'bg-[#141715] hover:bg-[#3B6647] text-[#8E968F] hover:text-[#EFF1EC] border border-[#28302A]'
                       }`}
                       title={isOnList ? 'Already on list' : 'Add to shopping list'}
                     >

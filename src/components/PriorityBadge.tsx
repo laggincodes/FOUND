@@ -17,25 +17,25 @@ export const PriorityBadge: React.FC<PriorityBadgeProps> = ({
     EXPIRED: {
       label: 'EXPIRED',
       icon: AlertOctagon,
-      classes: 'bg-[#FFDAD6] text-[#BA1A1A] border-[#FFB4AB] font-bold',
+      classes: 'bg-[#291916] text-[#E06D53] border-[#4A2822] font-mono font-bold',
       ariaDescription: 'Best before date has passed. Check smell and texture before consuming.',
     },
     USE_FIRST: {
       label: 'USE FIRST',
       icon: AlertOctagon,
-      classes: 'bg-[#FFDBD0] text-[#97472E] border-[#F5C2B4] font-bold',
+      classes: 'bg-[#291916] text-[#D9775E] border-[#4A2822] font-mono font-bold',
       ariaDescription: 'Highest planning priority. Needs immediate attention.',
     },
     USE_SOON: {
       label: 'USE SOON',
       icon: Clock,
-      classes: 'bg-[#FFDEAE] text-[#664500] border-[#FAD090] font-semibold',
+      classes: 'bg-[#292214] text-[#DEAB57] border-[#45371F] font-mono font-semibold',
       ariaDescription: 'Secondary planning priority. Plan meals around this soon.',
     },
     SAFE_FOR_NOW: {
       label: 'SAFE FOR NOW',
       icon: ShieldCheck,
-      classes: 'bg-[#C7ECCE] text-[#32533C] border-[#A8DEB4] font-medium',
+      classes: 'bg-[#17261C] text-[#7DB88F] border-[#27402F] font-mono font-medium',
       ariaDescription: 'Low planning priority according to entered data.',
     },
   };

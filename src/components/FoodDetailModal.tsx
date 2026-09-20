@@ -122,30 +122,30 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
       <div className="space-y-5">
         {/* Status Banners */}
         {pantryItem ? (
-          <div className="p-3 bg-olive-50 border border-olive-200 rounded-xl flex items-center gap-3 text-xs text-olive-900">
-            <Archive className="w-4 h-4 text-olive-700 shrink-0" />
+          <div className="p-3 bg-[#16261B] border border-[#23432B] rounded-xs flex items-center gap-3 text-xs text-[#86EFAC]">
+            <Archive className="w-4 h-4 text-[#86EFAC] shrink-0" />
             <div>
-              <span className="font-semibold">In your pantry: </span>
+              <span className="font-medium text-[#EFF1EC]">In your pantry: </span>
               {pantryItem.quantity} {pantryItem.unit} in {pantryItem.storageLocation || 'kitchen'}
               {pantryItem.bestBefore && (
-                <span className="text-olive-700 ml-1">
+                <span className="text-[#86EFAC]/80 ml-1">
                   (best before {new Date(pantryItem.bestBefore).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })})
                 </span>
               )}
             </div>
           </div>
         ) : (
-          <div className="p-3 bg-earth-50 border border-earth-200 rounded-xl flex items-center gap-3 text-xs text-earth-700">
-            <Info className="w-4 h-4 text-earth-500 shrink-0" />
+          <div className="p-3 bg-[#141715] border border-[#28302A] rounded-xs flex items-center gap-3 text-xs text-[#8E968F]">
+            <Info className="w-4 h-4 text-[#5A635B] shrink-0" />
             <span>Not currently in your pantry stock.</span>
           </div>
         )}
 
         {activeGroceryItem && (
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl flex items-center gap-3 text-xs text-amber-900">
-            <ShoppingCart className="w-4 h-4 text-amber-700 shrink-0" />
+          <div className="p-3 bg-[#282115] border border-[#42331C] rounded-xs flex items-center gap-3 text-xs text-[#FDE047]">
+            <ShoppingCart className="w-4 h-4 text-[#FDE047] shrink-0" />
             <div>
-              <span className="font-semibold">Already on your shopping list: </span>
+              <span className="font-medium text-[#EFF1EC]">Already on your shopping list: </span>
               {activeGroceryItem.quantity} {activeGroceryItem.unit}. Updating will adjust the planned quantity.
             </div>
           </div>
@@ -153,41 +153,41 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
 
         {/* Food Attributes Grid */}
         <div className="grid grid-cols-3 gap-2 text-xs">
-          <div className="bg-earth-50/80 p-2.5 rounded-xl border border-surface-border">
-            <div className="text-ink-muted flex items-center gap-1.5 mb-1">
-              <Thermometer className="w-3.5 h-3.5 text-earth-600" />
+          <div className="bg-[#141715] p-2.5 rounded-xs border border-[#28302A]">
+            <div className="text-[#8E968F] font-mono text-[10px] uppercase tracking-wider flex items-center gap-1.5 mb-1">
+              <Thermometer className="w-3.5 h-3.5 text-[#5A635B]" />
               Storage
             </div>
-            <div className="font-medium text-ink capitalize">{food.storageType || 'Pantry'}</div>
+            <div className="font-mono text-sm text-[#EFF1EC] capitalize">{food.storageType || 'Pantry'}</div>
           </div>
-          <div className="bg-earth-50/80 p-2.5 rounded-xl border border-surface-border">
-            <div className="text-ink-muted flex items-center gap-1.5 mb-1">
-              <Clock className="w-3.5 h-3.5 text-earth-600" />
+          <div className="bg-[#141715] p-2.5 rounded-xs border border-[#28302A]">
+            <div className="text-[#8E968F] font-mono text-[10px] uppercase tracking-wider flex items-center gap-1.5 mb-1">
+              <Clock className="w-3.5 h-3.5 text-[#5A635B]" />
               Shelf Life
             </div>
-            <div className="font-medium text-ink">~{food.typicalShelfLifeDays} days</div>
+            <div className="font-mono text-sm text-[#EFF1EC]">~{food.typicalShelfLifeDays} days</div>
           </div>
-          <div className="bg-earth-50/80 p-2.5 rounded-xl border border-surface-border">
-            <div className="text-ink-muted flex items-center gap-1.5 mb-1">
-              <span className="w-2 h-2 rounded-full bg-olive-600" />
+          <div className="bg-[#141715] p-2.5 rounded-xs border border-[#28302A]">
+            <div className="text-[#8E968F] font-mono text-[10px] uppercase tracking-wider flex items-center gap-1.5 mb-1">
+              <span className="w-1.5 h-1.5 rounded-full bg-[#86EFAC]" />
               Perishability
             </div>
-            <div className="font-medium text-ink capitalize">{food.perishability}</div>
+            <div className="font-mono text-sm text-[#EFF1EC] capitalize">{food.perishability}</div>
           </div>
         </div>
 
         {/* Common Uses */}
         {food.commonUses && food.commonUses.length > 0 && (
           <div>
-            <div className="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2 flex items-center gap-1.5">
-              <BookOpen className="w-3.5 h-3.5 text-earth-600" />
+            <div className="text-[10px] font-mono uppercase tracking-widest text-[#8E968F] mb-2 flex items-center gap-1.5">
+              <BookOpen className="w-3.5 h-3.5 text-[#5A635B]" />
               Common Meal Ideas
             </div>
             <div className="flex flex-wrap gap-1.5">
               {food.commonUses.map((use) => (
                 <span
                   key={use}
-                  className="text-xs px-2.5 py-1 bg-white border border-surface-border rounded-lg text-ink font-medium shadow-2xs"
+                  className="text-xs font-mono px-2.5 py-1 bg-[#141715] border border-[#28302A] rounded-xs text-[#EFF1EC]"
                 >
                   {use}
                 </span>
@@ -197,16 +197,16 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
         )}
 
         {/* Quantity & Unit Selection */}
-        <div className="border-t border-surface-border pt-4">
-          <label className="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">
+        <div className="border-t border-[#28302A] pt-4">
+          <label className="block text-[10px] font-mono uppercase tracking-widest text-[#8E968F] mb-2">
             Add to Grocery List
           </label>
           <div className="flex items-center gap-3">
-            <div className="flex items-center border border-surface-border rounded-xl bg-earth-50/50 p-1">
+            <div className="flex items-center border border-[#28302A] rounded-xs bg-[#141715] p-1">
               <button
                 type="button"
                 onClick={handleDecrement}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-muted hover:text-ink hover:bg-white transition-colors"
+                className="w-8 h-8 rounded-xs flex items-center justify-center text-[#8E968F] hover:text-[#EFF1EC] hover:bg-[#1E2420] transition-colors"
                 aria-label="Decrease quantity"
               >
                 <Minus className="w-4 h-4" />
@@ -217,12 +217,12 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                 step={selectedUnit === 'g' || selectedUnit === 'ml' ? '50' : '0.5'}
                 value={quantity}
                 onChange={(e) => setQuantity(Math.max(0.1, parseFloat(e.target.value) || 0.1))}
-                className="w-16 text-center text-sm font-semibold text-ink bg-transparent focus:outline-none"
+                className="w-16 text-center text-sm font-mono text-[#EFF1EC] bg-transparent focus:outline-none"
               />
               <button
                 type="button"
                 onClick={handleIncrement}
-                className="w-8 h-8 rounded-lg flex items-center justify-center text-ink-muted hover:text-ink hover:bg-white transition-colors"
+                className="w-8 h-8 rounded-xs flex items-center justify-center text-[#8E968F] hover:text-[#EFF1EC] hover:bg-[#1E2420] transition-colors"
                 aria-label="Increase quantity"
               >
                 <Plus className="w-4 h-4" />
@@ -237,10 +237,10 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                     key={u}
                     type="button"
                     onClick={() => setSelectedUnit(u)}
-                    className={`px-3 py-1.5 text-xs font-medium rounded-lg border transition-all ${
+                    className={`px-3 py-1.5 text-xs font-mono rounded-xs border transition-all ${
                       selectedUnit === u
-                        ? 'bg-ink text-white border-ink shadow-2xs'
-                        : 'bg-white text-ink-muted border-surface-border hover:border-earth-400'
+                        ? 'bg-[#1E2420] text-[#EFF1EC] border-[#3B6647]'
+                        : 'bg-[#141715] text-[#8E968F] border-[#28302A] hover:border-[#3B6647]/50 hover:text-[#EFF1EC]'
                     }`}
                   >
                     {u}
@@ -248,7 +248,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
                 ))}
               </div>
             ) : (
-              <span className="text-xs font-medium text-ink-muted px-2 py-1 bg-earth-100 rounded-lg">
+              <span className="text-xs font-mono text-[#8E968F] px-2 py-1 bg-[#141715] border border-[#28302A] rounded-xs">
                 {selectedUnit}
               </span>
             )}
@@ -261,15 +261,15 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
             type="button"
             onClick={handleAddOrUpdateGrocery}
             disabled={justAdded}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-sm font-medium transition-all ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xs text-xs font-mono uppercase tracking-wider transition-all ${
               justAdded
-                ? 'bg-olive-600 text-white'
-                : 'bg-olive-800 text-white hover:bg-olive-900 active:scale-[0.99] shadow-sm'
+                ? 'bg-[#16261B] text-[#86EFAC] border border-[#23432B]'
+                : 'bg-[#3B6647] text-[#EFF1EC] hover:bg-[#467854] border border-[#4E805B]/30 active:scale-[0.99]'
             }`}
           >
             {justAdded ? (
               <>
-                <Check className="w-4 h-4" />
+                <Check className="w-4 h-4 text-[#86EFAC]" />
                 {activeGroceryItem ? 'Updated on Shopping List' : 'Added to Shopping List'}
               </>
             ) : (
@@ -284,7 +284,7 @@ export const FoodDetailModal: React.FC<FoodDetailModalProps> = ({
             type="button"
             onClick={handleDontSuggest}
             disabled={justHidden}
-            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xl text-xs text-terracotta-700 bg-terracotta-50 hover:bg-terracotta-100 border border-terracotta-200 transition-colors"
+            className="flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-xs text-xs font-mono uppercase tracking-wider text-[#F87171] bg-[#2D1915] hover:bg-[#3D221D] border border-[#4D241D] transition-colors"
             title="Exclude this item from future recommendations"
           >
             <Ban className="w-3.5 h-3.5" />

@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,8 +6,10 @@
 
 @layer base {
   :root {
-    --background: #FBFBFA;
-    --foreground: #191C1B;
+    --background: #121513;
+    --foreground: #EFF1EC;
+    --surface: #181C19;
+    --border: #28302A;
   }
 
   * {
@@ -17,11 +19,13 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    background-color: #121513;
+    color: #EFF1EC;
   }
 
   body {
-    background-color: #FBFBFA;
-    color: #191C1B;
+    background-color: #121513;
+    color: #EFF1EC;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
     font-feature-settings: "rlig" 1, "calt" 1;
     -webkit-font-smoothing: antialiased;
@@ -35,8 +39,25 @@
 
   /* Accessible focus rings */
   :focus-visible {
-    outline: 2px solid #1B3D2F;
+    outline: 2px solid #3B6647;
     outline-offset: 2px;
+  }
+}
+
+/* Subtle repeating botanical/organic linework pattern */
+.bg-editorial-pattern {
+  background-color: #121513;
+  /* 160px repeating sparse, abstract botanical curves & veins with extremely low opacity */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cpath d='M0 80 Q 40 40, 80 80 T 160 80 M80 0 Q 120 40, 80 80 T 80 160 M30 30 C 45 65, 65 45, 75 30 M110 110 C 125 145, 145 125, 155 110' fill='none' stroke='%2346574B' stroke-width='0.75' stroke-opacity='0.16'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 160px 160px;
+}
+
+@media (max-width: 640px) {
+  .bg-editorial-pattern {
+    /* Mobile: almost imperceptible */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cpath d='M0 80 Q 40 40, 80 80 T 160 80 M80 0 Q 120 40, 80 80 T 80 160' fill='none' stroke='%2346574B' stroke-width='0.5' stroke-opacity='0.08'/%3E%3C/svg%3E");
+    background-size: 200px 200px;
   }
 }
 
@@ -54,21 +75,21 @@
 
   /* Custom subtle shadow */
   .shadow-soft {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   .shadow-card {
-    box-shadow: 0 2px 8px -2px rgba(25, 28, 27, 0.05), 0 1px 4px -1px rgba(25, 28, 27, 0.03);
+    box-shadow: 0 2px 8px -2px rgba(0, 0, 0, 0.4), 0 1px 4px -1px rgba(0, 0, 0, 0.3);
   }
 }
 
-/* Restrained card borders */
+/* Restrained dark card borders */
 .stitch-border {
-  border: 1px solid #E2E5E1;
+  border: 1px solid #28302A;
 }
 
 .stitch-card {
-  background-color: #FFFFFF;
-  border: 1px solid #E2E5E1;
+  background-color: #181C19;
+  border: 1px solid #28302A;
   border-radius: 0.75rem;
 }
