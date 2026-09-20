@@ -269,3 +269,38 @@ export function checkItemInventoryPure(
     isBoughtAhead: totalDurableQty >= 2 || totalFoodQty >= 2,
   };
 }
+
+/**
+ * Checks query against inventory, with fallback concepts from semantic interpretation.
+ * Pure deterministic logic evaluates all concepts against actual user inventory.
+ */
+export function checkItemInventoryWithConcepts(
+  query: string,
+  concepts: string[],
+  durableItems: DurableItem[],
+  foodItems: FoodItem[],
+  purchaseHistory: PurchaseHistoryItem[]
+): SearchMatchResult {
+  const direct = checkItemInventoryPure(query, durableItems, foodItems, purchaseHistory);
+  if (direct.found) {
+    return direct;
+  }
+
+  if (Array.isArray(concepts)) {
+    for (const concept of concepts) {
+      const trimmed = concept?.trim();
+      if (!trimmed || trimmed.toLowerCase() === query.trim().toLowerCase()) continue;
+      const match = checkItemInventoryPure(trimmed, durableItems, foodItems, purchaseHistory);
+      if (match.found) {
+        return {
+          ...match,
+          query,
+          headline: `You already have ${match.totalQuantity} (${match.name}).`,
+          decisionReason: `Matched via concept "${trimmed}": ${match.decisionReason}`,
+        };
+      }
+    }
+  }
+
+  return direct;
+}

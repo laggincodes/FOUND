@@ -28,7 +28,7 @@ import {
   getGroceryRecommendations,
   recordPurchaseAndRecalculateStats,
 } from './recommendationEngine';
-import { checkItemInventoryPure } from './inventory-checker';
+import { checkItemInventoryPure, checkItemInventoryWithConcepts } from './inventory-checker';
 import { createClient as createSupabaseClient, isSupabaseConfigured } from './supabase/client';
 import { SupabaseSyncService } from './supabase/syncService';
 
@@ -55,7 +55,7 @@ interface PantryContextType {
   addDurableItem: (item: Omit<DurableItem, 'id' | 'createdAt' | 'updatedAt'>) => DurableItem;
   updateDurableItem: (id: string, updates: Partial<Omit<DurableItem, 'id' | 'createdAt'>>) => void;
   deleteDurableItem: (id: string) => void;
-  checkItemInventory: (query: string) => SearchMatchResult;
+  checkItemInventory: (query: string, concepts?: string[]) => SearchMatchResult;
   markIngredientsUsed: (
     usedItems: { name: string; amountUsed: number; unit: string; recipeId?: string; recipeName?: string; foodId?: string }[]
   ) => { rescuedCount: number; rescuedValue: number; rescuedWeightKg: number };
@@ -310,6 +310,36 @@ const USER_001_INITIAL_ITEMS: FoodItem[] = [
     createdAt: getIsoTimeStr(-15),
     updatedAt: getIsoTimeStr(-15),
   },
+  {
+    id: 'item-u1-onion',
+    foodId: 'food-onion',
+    name: 'Red Onions',
+    category: 'Produce',
+    quantity: 1,
+    unit: 'kg',
+    bestBefore: getDateStr(14),
+    opened: false,
+    purchaseDate: getDateStr(-3),
+    storageLocation: 'Cupboard / Pantry',
+    notes: 'Fresh red onions in vegetable basket.',
+    createdAt: getIsoTimeStr(-3),
+    updatedAt: getIsoTimeStr(-3),
+  },
+  {
+    id: 'item-u1-rice',
+    foodId: 'food-rice-basmati',
+    name: 'Basmati Rice',
+    category: 'Pantry & Grains',
+    quantity: 2,
+    unit: 'kg',
+    bestBefore: getDateStr(90),
+    opened: true,
+    purchaseDate: getDateStr(-15),
+    storageLocation: 'Cupboard / Pantry',
+    notes: 'Aged basmati rice jar.',
+    createdAt: getIsoTimeStr(-15),
+    updatedAt: getIsoTimeStr(-15),
+  },
 ];
 
 const USER_001_INITIAL_GROCERIES: GroceryItem[] = [
@@ -377,6 +407,19 @@ const USER_001_INITIAL_DURABLES: DurableItem[] = [
     notes: 'Main work desk adapter',
     createdAt: getIsoTimeStr(-90),
     updatedAt: getIsoTimeStr(-90),
+  },
+  {
+    id: 'dur-u1-backpack',
+    name: 'Commuter Laptop Backpack',
+    category: 'Other',
+    quantity: 1,
+    unit: 'pcs',
+    location: 'Closet Hook',
+    purchaseDate: getDateStr(-120),
+    purchasePrice: 1899,
+    notes: 'Water-resistant everyday campus backpack',
+    createdAt: getIsoTimeStr(-120),
+    updatedAt: getIsoTimeStr(-120),
   },
 ];
 
@@ -1159,7 +1202,10 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // FOUND: UNIFIED "BEFORE YOU BUY" INVENTORY CHECK
   // =========================================================================
 
-  const checkItemInventory = useCallback((query: string): SearchMatchResult => {
+  const checkItemInventory = useCallback((query: string, concepts?: string[]): SearchMatchResult => {
+    if (concepts && concepts.length > 0) {
+      return checkItemInventoryWithConcepts(query, concepts, durableItems, items, purchaseHistory);
+    }
     return checkItemInventoryPure(query, durableItems, items, purchaseHistory);
   }, [durableItems, items, purchaseHistory]);
 

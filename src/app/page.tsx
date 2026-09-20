@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePantry } from '@/lib/store';
 import { useToast } from '@/components/Toast';
@@ -16,6 +16,8 @@ import {
   ShoppingCart,
   Sparkles,
   HelpCircle,
+  UtensilsCrossed,
+  Loader2,
 } from 'lucide-react';
 import { SearchMatchResult } from '@/types';
 
@@ -37,15 +39,94 @@ export default function DashboardPage() {
   // Search state for "BEFORE YOU BUY"
   const [searchQuery, setSearchQuery] = useState('');
   const [activeChip, setActiveChip] = useState<string | null>(null);
+  const [semanticConcepts, setSemanticConcepts] = useState<Record<string, string[]>>({});
+  const [isSearchingSemantic, setIsSearchingSemantic] = useState(false);
 
   const demoChips = ['notebook', 'milk', 'toothpaste', 'USB hub', 'spinach'];
 
-  // Real-time search result from store
-  const searchResult: SearchMatchResult | null = useMemo(() => {
+  // Pure direct search result first
+  const directResult: SearchMatchResult | null = useMemo(() => {
     const q = searchQuery.trim();
     if (!q) return null;
     return checkItemInventory(q);
   }, [searchQuery, checkItemInventory]);
+
+  // Semantic query understanding when pure search finds no match & query has >= 3 words
+  useEffect(() => {
+    const q = searchQuery.trim();
+    const words = q.split(/\s+/).filter(Boolean);
+
+    // Only invoke semantic helper for natural queries (>= 3 words) when pure direct search is negative
+    if (words.length < 3 || (directResult && directResult.found)) {
+      return;
+    }
+
+    const lowerQ = q.toLowerCase();
+    const cacheKey = `found_semantic_${lowerQ}`;
+
+    if (semanticConcepts[lowerQ]) {
+      return;
+    }
+
+    // Check sessionStorage
+    try {
+      const cached = typeof window !== 'undefined' ? sessionStorage.getItem(cacheKey) : null;
+      if (cached) {
+        const parsed = JSON.parse(cached);
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setSemanticConcepts((prev) => ({ ...prev, [lowerQ]: parsed }));
+          return;
+        }
+      }
+    } catch {
+      // Ignore sessionStorage error
+    }
+
+    let active = true;
+    const timer = setTimeout(async () => {
+      try {
+        setIsSearchingSemantic(true);
+        const res = await fetch('/api/inventory/semantic-match', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ query: q }),
+        });
+
+        if (!res.ok) return;
+        const data = await res.json();
+        if (active && data?.concepts && Array.isArray(data.concepts) && data.concepts.length > 0) {
+          setSemanticConcepts((prev) => ({ ...prev, [lowerQ]: data.concepts }));
+          try {
+            sessionStorage.setItem(cacheKey, JSON.stringify(data.concepts));
+          } catch {
+            // ignore
+          }
+        }
+      } catch (err) {
+        console.warn('Semantic search error:', err);
+      } finally {
+        if (active) setIsSearchingSemantic(false);
+      }
+    }, 450);
+
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [searchQuery, directResult, semanticConcepts]);
+
+  // Combined result: pure match takes immediate precedence, fallback to semantic concepts
+  const searchResult: SearchMatchResult | null = useMemo(() => {
+    const q = searchQuery.trim();
+    if (!q) return null;
+    if (directResult && directResult.found) return directResult;
+
+    const concepts = semanticConcepts[q.toLowerCase()];
+    if (concepts && concepts.length > 0) {
+      return checkItemInventory(q, concepts);
+    }
+    return directResult;
+  }, [searchQuery, directResult, semanticConcepts, checkItemInventory]);
 
   const handleChipClick = (chip: string) => {
     setActiveChip(chip);
@@ -218,6 +299,9 @@ export default function DashboardPage() {
         {/* STUDENT GREETING HEADER */}
         <div className="flex items-center justify-between mb-5">
           <div>
+            <div className="text-[11px] font-extrabold uppercase tracking-wider text-primary mb-1">
+              FOUND — Gives your stuff a memory.
+            </div>
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[#191C1B]">
               {greeting}, {activeUser?.firstName || 'Student'}
             </h1>
@@ -266,7 +350,7 @@ export default function DashboardPage() {
               What are you looking for?
             </h2>
             <p className="text-xs text-[#5F6762] mt-0.5 mb-3">
-              Check before you buy.
+              Check before you buy. Find what you already have.
             </p>
 
             {/* Prominent Search Input */}
@@ -279,17 +363,20 @@ export default function DashboardPage() {
                   setSearchQuery(e.target.value);
                   setActiveChip(null);
                 }}
-                placeholder="Search notebook, milk, toothpaste, cables..."
-                className="w-full bg-[#F4F5F3] hover:bg-[#EEF0EC] focus:bg-white border border-[#D5D9D4] focus:border-primary focus:ring-3 focus:ring-primary/10 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base text-[#191C1B] placeholder:text-[#8A928D] outline-none transition-all pl-10 pr-9"
+                placeholder="Check before you buy… (e.g. notebook, cables, milk)"
+                className="w-full bg-[#F4F5F3] hover:bg-[#EEF0EC] focus:bg-white border border-[#D5D9D4] focus:border-primary focus:ring-3 focus:ring-primary/10 rounded-xl px-4 py-3 sm:py-3.5 text-sm sm:text-base text-[#191C1B] placeholder:text-[#8A928D] outline-none transition-all pl-10 pr-14"
               />
               <Search className="w-4 h-4 text-[#8A928D] absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+              {isSearchingSemantic && (
+                <Loader2 className="w-4 h-4 text-primary animate-spin absolute right-9 top-1/2 -translate-y-1/2" />
+              )}
               {searchQuery && (
                 <button
                   onClick={() => {
                     setSearchQuery('');
                     setActiveChip(null);
                   }}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A928D] hover:text-[#191C1B] text-xs font-bold p-1"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-[#8A928D] hover:text-[#191C1B] text-xs font-bold p-1 cursor-pointer"
                   title="Clear"
                 >
                   ✕
@@ -545,13 +632,13 @@ export default function DashboardPage() {
             Quick Actions
           </h2>
 
-          <div className="grid grid-cols-3 gap-2.5 sm:gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 sm:gap-3">
             <Link
               href="/add"
               className="p-3 bg-white hover:bg-[#F4F5F3] border border-[#E2E5E1] hover:border-primary rounded-xl text-center transition-all group flex flex-col items-center justify-center min-h-[68px]"
             >
-              <Package className="w-5 h-5 text-primary mb-1 group-hover:scale-105 transition-transform" />
-              <span className="text-xs font-bold text-[#191C1B]">+ Food</span>
+              <Plus className="w-5 h-5 text-primary mb-1 group-hover:scale-105 transition-transform" />
+              <span className="text-xs font-bold text-[#191C1B]">Add Item</span>
             </Link>
 
             <Link
@@ -559,7 +646,15 @@ export default function DashboardPage() {
               className="p-3 bg-white hover:bg-[#F4F5F3] border border-[#E2E5E1] hover:border-primary rounded-xl text-center transition-all group flex flex-col items-center justify-center min-h-[68px]"
             >
               <Box className="w-5 h-5 text-primary mb-1 group-hover:scale-105 transition-transform" />
-              <span className="text-xs font-bold text-[#191C1B]">+ Inventory</span>
+              <span className="text-xs font-bold text-[#191C1B]">Check Inventory</span>
+            </Link>
+
+            <Link
+              href="/recipes"
+              className="p-3 bg-white hover:bg-[#F4F5F3] border border-[#E2E5E1] hover:border-primary rounded-xl text-center transition-all group flex flex-col items-center justify-center min-h-[68px]"
+            >
+              <UtensilsCrossed className="w-5 h-5 text-primary mb-1 group-hover:scale-105 transition-transform" />
+              <span className="text-xs font-bold text-[#191C1B]">What Can I Cook?</span>
             </Link>
 
             <Link
@@ -567,7 +662,7 @@ export default function DashboardPage() {
               className="p-3 bg-white hover:bg-[#F4F5F3] border border-[#E2E5E1] hover:border-primary rounded-xl text-center transition-all group flex flex-col items-center justify-center min-h-[68px]"
             >
               <ShoppingCart className="w-5 h-5 text-primary mb-1 group-hover:scale-105 transition-transform" />
-              <span className="text-xs font-bold text-[#191C1B]">+ Grocery</span>
+              <span className="text-xs font-bold text-[#191C1B]">Grocery List</span>
             </Link>
           </div>
         </section>

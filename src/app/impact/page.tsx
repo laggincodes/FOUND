@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Link from 'next/link';
 import { usePantry } from '@/lib/store';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
@@ -12,10 +12,30 @@ import {
   Clock,
   ArrowRight,
   Package,
+  Sparkles,
 } from 'lucide-react';
 
 export default function ImpactPage() {
-  const { usageEvents, impactMetrics, isHydrated, durableItems } = usePantry();
+  const { usageEvents, impactMetrics, isHydrated, durableItems, items } = usePantry();
+
+  // Factual personal insight calculated from real user inventory
+  const personalInsightText = useMemo(() => {
+    const unusedDurables = durableItems.filter(
+      (d) => (d.notes && /unused|backup|spare/i.test(d.notes)) || d.quantity >= 2
+    );
+    const unopenedFood = items.filter((f) => !f.opened);
+
+    if (unusedDurables.length > 0 && unopenedFood.length > 0) {
+      return `You have ${unusedDurables[0].quantity} ${unusedDurables[0].name} in storage and unopened ${unopenedFood[0].name} in your pantry. Checking FOUND prevents duplicate purchases.`;
+    }
+    if (unusedDurables.length > 0) {
+      return `You currently have ${unusedDurables[0].quantity} ${unusedDurables[0].name} in storage. You don't need to purchase more stationery or supplies right now.`;
+    }
+    if (impactMetrics.itemsUsedBeforePriority > 0) {
+      return `You've used ${impactMetrics.itemsUsedBeforePriority} ingredients before their best-before date, keeping ₹${impactMetrics.estimatedFoodValueINR} in your wallet.`;
+    }
+    return `You're tracking ${durableItems.length} personal items and ${items.length} pantry ingredients. Every item logged prevents accidental double-buying.`;
+  }, [durableItems, items, impactMetrics]);
 
   // Format date readable
   const formatDate = (isoStr: string) => {
@@ -121,6 +141,24 @@ export default function ImpactPage() {
                 cooked from pantry
               </p>
             </div>
+          </div>
+        </div>
+
+        {/* Personal Insight: Factual, calculated observation from real user inventory */}
+        <div className="bg-[#E3F2E9]/70 border border-[#C7ECCE] rounded-2xl p-4 sm:p-5 mb-8 flex items-start gap-3.5 shadow-2xs">
+          <div className="w-8 h-8 rounded-full bg-white text-primary flex items-center justify-center shrink-0 shadow-2xs mt-0.5">
+            <Sparkles className="w-4 h-4" />
+          </div>
+          <div className="min-w-0">
+            <div className="text-[10px] font-extrabold uppercase tracking-wider text-primary">
+              Personal Insight
+            </div>
+            <p className="text-xs sm:text-sm font-semibold text-[#191C1B] mt-0.5">
+              {personalInsightText}
+            </p>
+            <p className="text-[11px] text-[#5F6762] mt-1">
+              FOUND monitors your stock so you never rebuy things you already have at home.
+            </p>
           </div>
         </div>
 

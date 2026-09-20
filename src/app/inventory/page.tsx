@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import { usePantry } from '@/lib/store';
 import { useToast } from '@/components/Toast';
@@ -56,6 +56,61 @@ export default function DurableInventoryPage() {
   const [purchasePrice, setPurchasePrice] = useState('');
   const [purchaseDate, setPurchaseDate] = useState(new Date().toISOString().split('T')[0]);
   const [notes, setNotes] = useState('');
+  const [suggestion, setSuggestion] = useState<{
+    suggestedName?: string;
+    category?: DurableCategory;
+    aliases?: string[];
+  } | null>(null);
+  const [isCategorizing, setIsCategorizing] = useState(false);
+
+  // Debounced smart category suggestion when typing item name
+  useEffect(() => {
+    const trimmed = name.trim();
+    if (trimmed.length < 3 || editingItem) {
+      setSuggestion(null);
+      return;
+    }
+
+    let active = true;
+    const timer = setTimeout(async () => {
+      try {
+        setIsCategorizing(true);
+        const res = await fetch('/api/inventory/categorize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name: trimmed }),
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        if (active && data.success && data.category) {
+          let validCat: DurableCategory = 'Other';
+          const catStr = data.category;
+          if (CATEGORIES.includes(catStr as DurableCategory)) {
+            validCat = catStr as DurableCategory;
+          } else if (catStr === 'Personal Care') {
+            validCat = 'Toiletries';
+          } else if (catStr === 'Tools' || catStr === 'Kitchenware') {
+            validCat = 'Household';
+          }
+
+          setSuggestion({
+            suggestedName: data.suggestedName,
+            category: validCat,
+            aliases: data.aliases,
+          });
+        }
+      } catch (err) {
+        console.warn('Categorize error:', err);
+      } finally {
+        if (active) setIsCategorizing(false);
+      }
+    }, 500);
+
+    return () => {
+      active = false;
+      clearTimeout(timer);
+    };
+  }, [name, editingItem]);
 
   const openAddModal = () => {
     setName('');
@@ -66,6 +121,7 @@ export default function DurableInventoryPage() {
     setPurchasePrice('');
     setPurchaseDate(new Date().toISOString().split('T')[0]);
     setNotes('');
+    setSuggestion(null);
     setEditingItem(null);
     setIsAddModalOpen(true);
   };
@@ -80,6 +136,7 @@ export default function DurableInventoryPage() {
     setPurchasePrice(item.purchasePrice ? item.purchasePrice.toString() : '');
     setPurchaseDate(item.purchaseDate || new Date().toISOString().split('T')[0]);
     setNotes(item.notes || '');
+    setSuggestion(null);
     setIsAddModalOpen(true);
   };
 
@@ -323,6 +380,31 @@ export default function DurableInventoryPage() {
                 className="w-full px-3 py-2 text-sm border border-[#D5D9D4] focus:border-primary focus:ring-2 focus:ring-primary/10 rounded-lg outline-none"
                 autoFocus
               />
+              {suggestion && (
+                <div className="mt-1.5 flex items-center gap-2 flex-wrap text-xs">
+                  <span className="text-[11px] text-[#5F6762]">
+                    Suggested: <strong>{suggestion.category}</strong>
+                  </span>
+                  {category !== suggestion.category && (
+                    <button
+                      type="button"
+                      onClick={() => suggestion.category && setCategory(suggestion.category)}
+                      className="px-2 py-0.5 rounded-full bg-[#E3F2E9] hover:bg-[#D2EBD9] text-primary font-bold text-[10px] transition-colors cursor-pointer"
+                    >
+                      Apply Category
+                    </button>
+                  )}
+                  {suggestion.suggestedName && suggestion.suggestedName.toLowerCase() !== name.toLowerCase() && (
+                    <button
+                      type="button"
+                      onClick={() => setName(suggestion.suggestedName!)}
+                      className="px-2 py-0.5 rounded-full bg-[#F2F4F1] hover:bg-[#E2E5E1] text-[#2A2F2D] text-[10px] font-medium transition-colors cursor-pointer"
+                    >
+                      Use &quot;{suggestion.suggestedName}&quot;
+                    </button>
+                  )}
+                </div>
+              )}
             </div>
 
             {/* Category & Quantity */}
