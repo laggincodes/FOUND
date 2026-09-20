@@ -1,110 +1,67 @@
-# Use It First
+# FOUND
 
-> **See what you have. Use what matters first.**
+> **Before you buy it. Find what you already have.**
 
-Use It First is a household food-intelligence web application designed to help people understand what food they already have, decide what needs attention, find something to cook, and keep their pantry updated as food is used.
+FOUND is a student-first personal resource app designed to solve everyday over-purchasing and forgotten items. Whether checking for spare notebooks, phone chargers, toiletries, or groceries before shopping, FOUND gives students instant clarity with intelligent decision badges (`WAIT`, `USE FIRST`, `ALREADY HAVE`, `NOT FOUND`), unified search across durable goods and food pantries, and real-time impact tracking.
 
 ---
 
-## Product Loop
+## The FOUND Loop
 
 ```text
-Add Food
-   ↓
-Track Pantry
-   ↓
-Use First
-   ↓
-Find a Meal
-   ↓
-Cook / Use
-   ↓
-Update Pantry
-   ↓
-Track Impact
+Check FOUND ("Do I have this?")
+        ↓
+    Decision
+┌───────┴───────┐
+│               │
+WAIT / USE      BUY
+(In Inventory)  (Add to Grocery List)
+│               │
+Use / Deplete   Purchase & Move to Pantry/Inventory
+└───────┬───────┘
+        ↓
+Track Impact (Money Saved & Waste Prevented)
 ```
 
 ---
 
 ## Core Features
 
-### 1. My Pantry (`/pantry`)
-Track household food inventory in your Kitchen Larder.
-* **Views**: Toggle between visual **Grid** and high-density **List** views.
-* **Search & Filters**: Instant multi-attribute search and tabs (`All`, `Use First`, `Use Soon`, `Safe for now`, `Opened Packages`, `Recently Added`).
-* **Sorting**: Sort by Urgency, Date proximity, Alphabetical, or Recently added.
-* **Actions**: Inline quick-edit, slide-over drawer editing, delete confirmation, and *"Mark as used"*.
-* **Empty State**: *"Your pantry is waiting."* with demo data restore action.
+### 1. Unified Search (`/`)
+* **Instant Decision Badges**:
+  * **`WAIT`**: You already have unused/spare quantity in stock (e.g. 2 unused notebooks in drawer backup).
+  * **`USE FIRST`**: Item is in stock and needs immediate attention or is expiring soon.
+  * **`ALREADY HAVE`**: Sufficient inventory in active use or storage.
+  * **`NOT FOUND`**: Item not in inventory; 1-click addition to grocery checklist.
+* **Bought-Ahead Intelligence**: Surfaces historical price and purchase date so you don't re-buy surplus items.
 
-### 2. Use First (`/priority`)
-Deterministic prioritization engine grouping inventory into three actionable tiers:
-* **USE FIRST**: Terracotta (`#97472E`). Immediate attention (wilting greens, approaching dates, opened perishables).
-* **USE SOON**: Amber (`#664500`). Items worth planning around this week.
-* **SAFE FOR NOW**: Deep green (`#32533C`). Shelf-stable pantry staples.
-* **Transparent Rationale**: Every prioritized item displays plain-language reasons without false food-safety guarantees.
+### 2. Personal Inventory & Shelves (`/inventory`)
+* **Durable Goods Tracking**: Track notebooks, stationery, electronics, cables, toiletries, lab gear, and dorm essentials.
+* **Location Management**: Know exactly where things are stored (Desk Drawer, Backpack, Shelf, Closet, Bathroom Caddy).
+* **State Tracking**: Distinguishes items in active use from backup/unused stock.
 
-### 3. What Can I Eat? (`/recipes`)
-Pantry-aware recipe matching that answers *"What can I make with what I already have?"*
-* **Dynamic Ranking**: Recipes ranked primarily by the number of priority ingredients they rescue.
-* **Recipe Details** ([`/recipes/palak-paneer`](/recipes/palak-paneer)): Step-by-step instructions with clear `AVAILABLE` vs `MISSING` ingredient badges.
-* **Recipe Completion**: *"Mark ingredients as used"* reduces pantry stock, clears depleted items, updates impact metrics, and provides toast confirmation.
+### 3. Food Pantry (`/pantry`)
+* **Urgency Tiers**: `USE FIRST`, `USE SOON`, and `SAFE FOR NOW` based on real shelf-life and opened dates.
+* **Dual Views**: High-density Grid and List layouts with quick status editing and depletion logging.
 
-### 4. Add Food (`/add`, `/add/manual`, `/scan`)
-* **Manual Add**: Clean validated form with field-level checks (*"Please enter a food name."*, *"Expiry date cannot be before purchase date."*).
-* **Pantry Scanner**: Photo capture with pre-configured sample images, honest processing state (*"Looking for recognizable food items…"*, no pseudo-scientific claims), and an editable verification table at `/scan/results`.
-* **Quick Add**: 1-click logging for household staples (Spinach, Milk, Paneer, Tomatoes, Bread, Eggs, Yogurt, Coriander).
+### 4. Smart Grocery List (`/grocery`)
+* **Item Checklist**: Sorted by Priority (`HIGH`, `MEDIUM`, `LOW`) with quantities and store departments.
+* **Move to Pantry/Inventory**: Checked items automatically transfer to your active inventory with one tap.
 
 ### 5. My Impact (`/impact`)
-Measures actual household food-rescue activity:
-* Food items used on time
-* Homecooked meals prepared
-* Estimated grocery value retained (in ₹)
-* Weekly kitchen utilization (in kg)
-* Immutable activity timeline of cooking and pantry events
+* **Student Savings**: Measures estimated ₹ saved by avoiding unnecessary duplicate purchases.
+* **Diverted Waste**: Tracks food items eaten on time and durable goods kept in active circulation.
+* **Activity History**: Complete log of items used, found, and purchased.
 
 ---
 
-## Design System (Stitch)
+## Tech Stack
 
-* **Typography**: **Newsreader** for headlines, editorial statements, and recipe titles; **Plus Jakarta Sans** for navigation, buttons, forms, and functional UI.
-* **Palette**:
-  * Background & Surface: `#FAF9FC`
-  * Primary Green: `#32533C` (active navigation, primary buttons, safe inventory)
-  * Secondary Terracotta: `#97472E` (`USE FIRST` urgent attention)
-  * Tertiary Amber: `#664500` (`USE SOON` caution)
-  * Surface Containers: `#EEEDF1`, `#F4F3F7`, `#E9E7EB`, `#E3E2E6`
-  * Outline: `#727972`, `#C2C8C0`
-* **Border Radii**: Restrained radii (`0.125rem` to `0.75rem`).
-* **Brand Mark**: Minimal pantry jar / hourglass silhouette.
-
----
-
-## Main Routes
-
-| Route | Purpose |
-| :--- | :--- |
-| `/` | Dashboard: Hero (*"Use what you have. First."*), Quick Add, Needs your attention, What could you make?, This week at home |
-| `/pantry` | Kitchen Larder inventory with Grid/List view toggle, search, filter, and drawer editing |
-| `/add` | Add food gateway (Scan vs Manual) |
-| `/add/manual` | Validated manual entry form |
-| `/scan` | Photo scanner with sample images and honest detection states |
-| `/scan/results` | Candidate review and batch-confirmation table |
-| `/priority` | Central *Use First* planning board with plain-language explanations |
-| `/recipes` | Pantry-connected recipe catalog (*What Can I Eat?*) |
-| `/recipes/[slug]` | Recipe detail (including `/recipes/palak-paneer`) with *"Mark as used"* |
-| `/impact` | Household impact metrics and activity timeline |
-| `/about` | Philosophy, core loop, and grounded principles |
-| `/404` | Custom 404 (*"Looks like this ingredient went missing"*) |
-
----
-
-## REST API Endpoints (`/api/`)
-
-* `GET /api/pantry` & `POST /api/pantry`: Query and create inventory items.
-* `GET /api/recipes`: Fetch recipe catalog.
-* `GET /api/priority`: Query inventory categorized by priority tiers.
-* `GET /api/impact` & `POST /api/impact`: Query metrics or dispatch usage events.
-* `POST /api/scan`: Pluggable image scanner endpoint.
+* **Framework**: Next.js 14 (App Router)
+* **Language**: TypeScript
+* **Styling**: Tailwind CSS (Warm off-white `#FBFBFA`, Matte Forest `#1B3D2F`, Editorial Typography)
+* **Icons**: Lucide React
+* **State Management**: React Context with LocalStorage persistence
 
 ---
 
@@ -114,11 +71,14 @@ Measures actual household food-rescue activity:
 # Install dependencies
 npm install
 
-# Start local development server
+# Start development server
 npm run dev
 
 # Run linting check
 npm run lint
+
+# Run verification suite
+npx tsx scripts/test_found_mvp.ts
 
 # Production build
 npm run build
@@ -126,10 +86,6 @@ npm run build
 
 ---
 
-## Core Product Questions Answered
+## Repository
 
-* **What do I have?** $\longrightarrow$ Visible in **My Pantry** with instant search, location tags, and quantities.
-* **What needs attention?** $\longrightarrow$ Highlighted in **Needs your attention** and **Use First** with plain-language explanations.
-* **What can I make?** $\longrightarrow$ Recommended in **What Can I Eat?** prioritizing meals that rescue urgent ingredients.
-* **What did I use?** $\longrightarrow$ Captured when you mark items as used after cooking.
-* **What difference did that make?** $\longrightarrow$ Calculated in **My Impact** showing food saved, meals cooked, and estimated value retained.
+* **GitHub**: [https://github.com/laggincodes/FOUND.git](https://github.com/laggincodes/FOUND.git)
