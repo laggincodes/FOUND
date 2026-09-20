@@ -18,6 +18,7 @@ import {
   AlertCircle,
   Sparkles,
   ShoppingBag,
+  LogOut,
 } from 'lucide-react';
 
 const DIETARY_OPTIONS = [
@@ -42,6 +43,8 @@ export default function ProfilePage() {
     purchaseHistory,
     purchaseStats,
     isHydrated,
+    isAuthenticated,
+    signOut,
   } = usePantry();
   const { showToast } = useToast();
 
@@ -277,6 +280,43 @@ export default function ProfilePage() {
             Reset {activeUser.firstName}&apos;s Data to Demo Baseline
           </button>
         </div>
+      </section>
+
+      {/* Account & Session */}
+      <section className="bg-white p-6 rounded-2xl border border-surface-border space-y-4 shadow-2xs">
+        <h2 className="font-serif font-bold text-lg text-ink flex items-center gap-2">
+          <Users className="w-4 h-4 text-primary" />
+          <span>Account & Session</span>
+        </h2>
+        <div className="space-y-2.5 text-xs">
+          <div className="flex items-center justify-between py-2 border-b border-surface-border">
+            <span className="text-ink-muted">Display Name</span>
+            <span className="font-semibold text-ink">{activeUser.firstName}</span>
+          </div>
+          <div className="flex items-center justify-between py-2 border-b border-surface-border">
+            <span className="text-ink-muted">Email</span>
+            <span className="font-semibold text-ink">{activeUser.email || 'Not provided'}</span>
+          </div>
+          <div className="flex items-center justify-between py-2 border-b border-surface-border">
+            <span className="text-ink-muted">Account Status</span>
+            <span className="inline-flex items-center gap-1 font-bold text-xs px-2 py-0.5 rounded-full bg-[#E3F2E9] text-[#1B3D2F]">
+              {isAuthenticated ? 'Authenticated (Supabase)' : 'Demo Session'}
+            </span>
+          </div>
+        </div>
+
+        {isAuthenticated && (
+          <div className="pt-2">
+            <button
+              type="button"
+              onClick={signOut}
+              className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#FFF0ED] hover:bg-[#FFE5DF] text-[#97472E] border border-[#F5C2B4] text-xs font-bold rounded-xl transition-colors cursor-pointer"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span>Log out of FOUND</span>
+            </button>
+          </div>
+        )}
       </section>
     </div>
   );

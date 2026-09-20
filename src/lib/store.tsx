@@ -29,6 +29,8 @@ import {
   recordPurchaseAndRecalculateStats,
 } from './recommendationEngine';
 import { checkItemInventoryPure } from './inventory-checker';
+import { createClient as createSupabaseClient, isSupabaseConfigured } from './supabase/client';
+import { SupabaseSyncService } from './supabase/syncService';
 
 interface PantryContextType {
   // User Identity & Multi-User Isolation
@@ -36,6 +38,10 @@ interface PantryContextType {
   userProfile: UserProfile;
   availableUsers: User[];
   switchUser: (userId: string) => void;
+  isAuthenticated: boolean;
+  isAuthLoading: boolean;
+  signOut: () => Promise<void>;
+  isSupabaseConfigured: boolean;
 
   // Inventory & Groceries
   items: FoodItem[];
@@ -792,11 +798,16 @@ const USER_002_PURCHASE_STATS: FoodPurchaseStats[] = [
 ];
 
 export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  // Supabase Auth State
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [isAuthLoading, setIsAuthLoading] = useState<boolean>(true);
+  const [authUser, setAuthUser] = useState<any>(null);
+
   // User Management
   const [activeUser, setActiveUser] = useState<User>(DEMO_USERS[0]);
   const [userProfile, setUserProfile] = useState<UserProfile>(DEMO_PROFILES['demo-user-001']);
 
-  // Household data states (scoped to active user)
+  // Household data states (strictly isolated per user)
   const [items, setItems] = useState<FoodItem[]>([]);
   const [durableItems, setDurableItems] = useState<DurableItem[]>([]);
   const [groceryItems, setGroceryItems] = useState<GroceryItem[]>([]);
@@ -806,108 +817,272 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [dismissedRecIds, setDismissedRecIds] = useState<string[]>([]);
   const [isHydrated, setIsHydrated] = useState(false);
 
-  // Helper storage key generators
+  // Helper storage key generators (scoped to authenticated user's ID)
   const getKey = useCallback((suffix: string, userId = activeUser.id) => {
-    return `use_it_first_${userId}_${suffix}`;
+    return `found_${userId}_${suffix}`;
   }, [activeUser.id]);
 
   // Load user data when activeUser changes
-  const loadUserData = useCallback((userId: string) => {
+  const loadUserData = useCallback((userId: string, isRealUser = false) => {
     try {
-      const user = DEMO_USERS.find((u) => u.id === userId) || DEMO_USERS[0];
-      setActiveUser(user);
       setDismissedRecIds([]);
 
-      // Profile
-      const storedProfile = localStorage.getItem(`use_it_first_${userId}_profile`);
-      if (storedProfile) {
-        setUserProfile(JSON.parse(storedProfile));
-      } else {
-        const defaultProfile = DEMO_PROFILES[userId] || DEMO_PROFILES['demo-user-001'];
-        setUserProfile(defaultProfile);
-        localStorage.setItem(`use_it_first_${userId}_profile`, JSON.stringify(defaultProfile));
-      }
+      if (!isRealUser) {
+        // DEMO USERS (Aarav / Priya)
+        const user = DEMO_USERS.find((u) => u.id === userId) || DEMO_USERS[0];
+        setActiveUser(user);
 
-      // Items
-      const storedItems = localStorage.getItem(`use_it_first_${userId}_items`);
-      if (storedItems) {
-        setItems(JSON.parse(storedItems));
-      } else {
-        const initial = userId === 'demo-user-001' ? USER_001_INITIAL_ITEMS : USER_002_INITIAL_ITEMS;
-        setItems(initial);
-        localStorage.setItem(`use_it_first_${userId}_items`, JSON.stringify(initial));
-      }
+        // Profile
+        const storedProfile = localStorage.getItem(`found_${userId}_profile`);
+        if (storedProfile) {
+          setUserProfile(JSON.parse(storedProfile));
+        } else {
+          const defaultProfile = DEMO_PROFILES[userId] || DEMO_PROFILES['demo-user-001'];
+          setUserProfile(defaultProfile);
+          localStorage.setItem(`found_${userId}_profile`, JSON.stringify(defaultProfile));
+        }
 
-      // Durable Items
-      const storedDurables = localStorage.getItem(`use_it_first_${userId}_durables`);
-      if (storedDurables) {
-        setDurableItems(JSON.parse(storedDurables));
-      } else {
-        const initial = userId === 'demo-user-001' ? USER_001_INITIAL_DURABLES : USER_002_INITIAL_DURABLES;
-        setDurableItems(initial);
-        localStorage.setItem(`use_it_first_${userId}_durables`, JSON.stringify(initial));
-      }
+        // Items
+        const storedItems = localStorage.getItem(`found_${userId}_items`);
+        if (storedItems) {
+          setItems(JSON.parse(storedItems));
+        } else {
+          const initial = userId === 'demo-user-001' ? USER_001_INITIAL_ITEMS : USER_002_INITIAL_ITEMS;
+          setItems(initial);
+          localStorage.setItem(`found_${userId}_items`, JSON.stringify(initial));
+        }
 
-      // Groceries
-      const storedGroceries = localStorage.getItem(`use_it_first_${userId}_groceries`);
-      if (storedGroceries) {
-        setGroceryItems(JSON.parse(storedGroceries));
-      } else {
-        const initial = userId === 'demo-user-001' ? USER_001_INITIAL_GROCERIES : USER_002_INITIAL_GROCERIES;
-        setGroceryItems(initial);
-        localStorage.setItem(`use_it_first_${userId}_groceries`, JSON.stringify(initial));
-      }
+        // Durable Items
+        const storedDurables = localStorage.getItem(`found_${userId}_durables`);
+        if (storedDurables) {
+          setDurableItems(JSON.parse(storedDurables));
+        } else {
+          const initial = userId === 'demo-user-001' ? USER_001_INITIAL_DURABLES : USER_002_INITIAL_DURABLES;
+          setDurableItems(initial);
+          localStorage.setItem(`found_${userId}_durables`, JSON.stringify(initial));
+        }
 
-      // Events
-      const storedEvents = localStorage.getItem(`use_it_first_${userId}_events`);
-      if (storedEvents) {
-        setUsageEvents(JSON.parse(storedEvents));
-      } else {
-        const initial = userId === 'demo-user-001' ? USER_001_USAGE_EVENTS : [];
-        setUsageEvents(initial);
-        localStorage.setItem(`use_it_first_${userId}_events`, JSON.stringify(initial));
-      }
+        // Groceries
+        const storedGroceries = localStorage.getItem(`found_${userId}_groceries`);
+        if (storedGroceries) {
+          setGroceryItems(JSON.parse(storedGroceries));
+        } else {
+          const initial = userId === 'demo-user-001' ? USER_001_INITIAL_GROCERIES : USER_002_INITIAL_GROCERIES;
+          setGroceryItems(initial);
+          localStorage.setItem(`found_${userId}_groceries`, JSON.stringify(initial));
+        }
 
-      // Purchase History
-      const storedHistory = localStorage.getItem(`use_it_first_${userId}_history`);
-      if (storedHistory) {
-        setPurchaseHistory(JSON.parse(storedHistory));
-      } else {
-        const initial = userId === 'demo-user-001' ? USER_001_PURCHASE_HISTORY : USER_002_PURCHASE_HISTORY;
-        setPurchaseHistory(initial);
-        localStorage.setItem(`use_it_first_${userId}_history`, JSON.stringify(initial));
-      }
+        // Events
+        const storedEvents = localStorage.getItem(`found_${userId}_events`);
+        if (storedEvents) {
+          setUsageEvents(JSON.parse(storedEvents));
+        } else {
+          const initial = userId === 'demo-user-001' ? USER_001_USAGE_EVENTS : [];
+          setUsageEvents(initial);
+          localStorage.setItem(`found_${userId}_events`, JSON.stringify(initial));
+        }
 
-      // Purchase Stats
-      const storedStats = localStorage.getItem(`use_it_first_${userId}_stats`);
-      if (storedStats) {
-        setPurchaseStats(JSON.parse(storedStats));
+        // Purchase History
+        const storedHistory = localStorage.getItem(`found_${userId}_history`);
+        if (storedHistory) {
+          setPurchaseHistory(JSON.parse(storedHistory));
+        } else {
+          const initial = userId === 'demo-user-001' ? USER_001_PURCHASE_HISTORY : USER_002_PURCHASE_HISTORY;
+          setPurchaseHistory(initial);
+          localStorage.setItem(`found_${userId}_history`, JSON.stringify(initial));
+        }
+
+        // Purchase Stats
+        const storedStats = localStorage.getItem(`found_${userId}_stats`);
+        if (storedStats) {
+          setPurchaseStats(JSON.parse(storedStats));
+        } else {
+          const initial = userId === 'demo-user-001' ? USER_001_PURCHASE_STATS : USER_002_PURCHASE_STATS;
+          setPurchaseStats(initial);
+          localStorage.setItem(`found_${userId}_stats`, JSON.stringify(initial));
+        }
       } else {
-        const initial = userId === 'demo-user-001' ? USER_001_PURCHASE_STATS : USER_002_PURCHASE_STATS;
-        setPurchaseStats(initial);
-        localStorage.setItem(`use_it_first_${userId}_stats`, JSON.stringify(initial));
+        // AUTHENTICATED REAL USER: Starts completely clean!
+        const storedProfile = localStorage.getItem(`found_${userId}_profile`);
+        if (storedProfile) {
+          setUserProfile(JSON.parse(storedProfile));
+        } else {
+          const defaultProfile: UserProfile = {
+            userId,
+            householdSize: 1,
+            preferredUnits: 'metric',
+            preferredCategories: ['Produce', 'Dairy & Eggs', 'Pantry & Grains'],
+            dietaryPreferences: [],
+            dislikedFoods: [],
+            hiddenFoodIds: [],
+            favoriteFoods: [],
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
+          setUserProfile(defaultProfile);
+          localStorage.setItem(`found_${userId}_profile`, JSON.stringify(defaultProfile));
+        }
+
+        const storedItems = localStorage.getItem(`found_${userId}_items`);
+        setItems(storedItems ? JSON.parse(storedItems) : []);
+
+        const storedDurables = localStorage.getItem(`found_${userId}_durables`);
+        setDurableItems(storedDurables ? JSON.parse(storedDurables) : []);
+
+        const storedGroceries = localStorage.getItem(`found_${userId}_groceries`);
+        setGroceryItems(storedGroceries ? JSON.parse(storedGroceries) : []);
+
+        const storedEvents = localStorage.getItem(`found_${userId}_events`);
+        setUsageEvents(storedEvents ? JSON.parse(storedEvents) : []);
+
+        const storedHistory = localStorage.getItem(`found_${userId}_history`);
+        setPurchaseHistory(storedHistory ? JSON.parse(storedHistory) : []);
+
+        const storedStats = localStorage.getItem(`found_${userId}_stats`);
+        setPurchaseStats(storedStats ? JSON.parse(storedStats) : []);
+
+        // Also asynchronously fetch from Supabase tables if configured
+        if (isSupabaseConfigured()) {
+          SupabaseSyncService.fetchUserData(userId).then((remote) => {
+            if (remote) {
+              if (remote.pantryItems && remote.pantryItems.length > 0) {
+                setItems(remote.pantryItems);
+                localStorage.setItem(`found_${userId}_items`, JSON.stringify(remote.pantryItems));
+              }
+              if (remote.durableItems && remote.durableItems.length > 0) {
+                setDurableItems(remote.durableItems);
+                localStorage.setItem(`found_${userId}_durables`, JSON.stringify(remote.durableItems));
+              }
+              if (remote.groceryItems && remote.groceryItems.length > 0) {
+                setGroceryItems(remote.groceryItems);
+                localStorage.setItem(`found_${userId}_groceries`, JSON.stringify(remote.groceryItems));
+              }
+              if (remote.usageEvents && remote.usageEvents.length > 0) {
+                setUsageEvents(remote.usageEvents);
+                localStorage.setItem(`found_${userId}_events`, JSON.stringify(remote.usageEvents));
+              }
+              if (remote.purchaseHistory && remote.purchaseHistory.length > 0) {
+                setPurchaseHistory(remote.purchaseHistory);
+                localStorage.setItem(`found_${userId}_history`, JSON.stringify(remote.purchaseHistory));
+              }
+              if (remote.profile) {
+                setUserProfile(remote.profile);
+                localStorage.setItem(`found_${userId}_profile`, JSON.stringify(remote.profile));
+              }
+            }
+          }).catch((err) => {
+            console.warn('[Supabase Sync] Fetch error:', err);
+          });
+        }
       }
     } catch (e) {
       console.error('Error loading scoped user data:', e);
     }
   }, []);
 
-  // Initial mount: check active user ID in localStorage and load
+  // Initialize Auth Session and Subscriptions
   useEffect(() => {
-    try {
-      const storedActiveId = localStorage.getItem('use_it_first_active_user_id') || 'demo-user-001';
-      loadUserData(storedActiveId);
+    let isMounted = true;
+
+    if (!isSupabaseConfigured()) {
+      setIsAuthLoading(false);
+      setIsAuthenticated(false);
+      const storedActiveId = localStorage.getItem('found_active_user_id') || 'demo-user-001';
+      loadUserData(storedActiveId, false);
       setIsHydrated(true);
-    } catch (e) {
-      console.error('Error hydrating store:', e);
-      setIsHydrated(true);
+      return;
     }
+
+    const supabase = createSupabaseClient();
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (!isMounted) return;
+      if (session?.user) {
+        setAuthUser(session.user);
+        setIsAuthenticated(true);
+        const name =
+          session.user.user_metadata?.full_name ||
+          session.user.user_metadata?.name ||
+          session.user.email?.split('@')[0] ||
+          'Student';
+        const userObj: User = {
+          id: session.user.id,
+          email: session.user.email,
+          firstName: name,
+          householdName: session.user.user_metadata?.household_name || `${name}'s Household`,
+          createdAt: session.user.created_at,
+          updatedAt: session.user.updated_at || session.user.created_at,
+        };
+        setActiveUser(userObj);
+        loadUserData(session.user.id, true);
+      } else {
+        setAuthUser(null);
+        setIsAuthenticated(false);
+        const storedActiveId = localStorage.getItem('found_active_user_id') || 'demo-user-001';
+        loadUserData(storedActiveId, false);
+      }
+      setIsAuthLoading(false);
+      setIsHydrated(true);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) return;
+      if (session?.user) {
+        setAuthUser(session.user);
+        setIsAuthenticated(true);
+        const name =
+          session.user.user_metadata?.full_name ||
+          session.user.user_metadata?.name ||
+          session.user.email?.split('@')[0] ||
+          'Student';
+        const userObj: User = {
+          id: session.user.id,
+          email: session.user.email,
+          firstName: name,
+          householdName: session.user.user_metadata?.household_name || `${name}'s Household`,
+          createdAt: session.user.created_at,
+          updatedAt: session.user.updated_at || session.user.created_at,
+        };
+        setActiveUser(userObj);
+        loadUserData(session.user.id, true);
+      } else {
+        setAuthUser(null);
+        setIsAuthenticated(false);
+      }
+      setIsAuthLoading(false);
+    });
+
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, [loadUserData]);
 
-  // Switch User handler
+  // Sign out handler
+  const signOut = async () => {
+    try {
+      if (isSupabaseConfigured()) {
+        const supabase = createSupabaseClient();
+        await supabase.auth.signOut();
+      }
+    } catch (e) {
+      console.warn('Sign out error:', e);
+    } finally {
+      setIsAuthenticated(false);
+      setAuthUser(null);
+      localStorage.removeItem('found_active_user_id');
+      if (typeof window !== 'undefined') {
+        window.location.href = '/login';
+      }
+    }
+  };
+
+  // Switch User handler (for demo mode)
   const switchUser = (userId: string) => {
-    localStorage.setItem('use_it_first_active_user_id', userId);
-    loadUserData(userId);
+    localStorage.setItem('found_active_user_id', userId);
+    loadUserData(userId, false);
   };
 
   // State persistence helpers for active user
@@ -951,19 +1126,33 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     };
     const updated = [newItem, ...durableItems];
     saveDurableItems(updated);
+    if (isAuthenticated) {
+      SupabaseSyncService.upsertDurableItem(activeUser.id, newItem);
+    }
     return newItem;
   };
 
   const updateDurableItem = (id: string, updates: Partial<Omit<DurableItem, 'id' | 'createdAt'>>) => {
-    const updated = durableItems.map((item) =>
-      item.id === id ? { ...item, ...updates, updatedAt: new Date().toISOString() } : item
-    );
+    let updatedItem: DurableItem | null = null;
+    const updated = durableItems.map((item) => {
+      if (item.id === id) {
+        updatedItem = { ...item, ...updates, updatedAt: new Date().toISOString() };
+        return updatedItem;
+      }
+      return item;
+    });
     saveDurableItems(updated);
+    if (isAuthenticated && updatedItem) {
+      SupabaseSyncService.upsertDurableItem(activeUser.id, updatedItem);
+    }
   };
 
   const deleteDurableItem = (id: string) => {
     const filtered = durableItems.filter((i) => i.id !== id);
     saveDurableItems(filtered);
+    if (isAuthenticated) {
+      SupabaseSyncService.deleteDurableItem(activeUser.id, id);
+    }
   };
 
   // =========================================================================
@@ -996,26 +1185,37 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
 
     const updated = [newItem, ...items];
     saveItems(updated);
+    if (isAuthenticated) {
+      SupabaseSyncService.upsertPantryItem(activeUser.id, newItem);
+    }
     return newItem;
   };
 
   const updateItem = (id: string, updates: Partial<Omit<FoodItem, 'id' | 'createdAt'>>) => {
+    let updatedItem: FoodItem | null = null;
     const updated = items.map((item) => {
       if (item.id === id) {
-        return {
+        updatedItem = {
           ...item,
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        return updatedItem;
       }
       return item;
     });
     saveItems(updated);
+    if (isAuthenticated && updatedItem) {
+      SupabaseSyncService.upsertPantryItem(activeUser.id, updatedItem);
+    }
   };
 
   const deleteItem = (id: string) => {
     const updated = items.filter((item) => item.id !== id);
     saveItems(updated);
+    if (isAuthenticated) {
+      SupabaseSyncService.deletePantryItem(activeUser.id, id);
+    }
   };
 
   const markIngredientsUsed = (
@@ -1665,8 +1865,12 @@ export const PantryProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       value={{
         activeUser,
         userProfile,
-        availableUsers: DEMO_USERS,
+        availableUsers: isAuthenticated ? [activeUser] : DEMO_USERS,
         switchUser,
+        isAuthenticated,
+        isAuthLoading,
+        signOut,
+        isSupabaseConfigured: isSupabaseConfigured(),
         items,
         durableItems,
         groceryItems,

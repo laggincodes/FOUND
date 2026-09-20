@@ -235,6 +235,30 @@ export default function DashboardPage() {
           </Link>
         </div>
 
+        {/* Onboarding Welcome State for New Empty Accounts */}
+        {isHydrated && items.length === 0 && durableItems.length === 0 && (
+          <section className="mb-7 p-6 sm:p-8 bg-white border border-[#E2E5E1] rounded-2xl shadow-2xs text-center animate-fadeIn">
+            <div className="w-12 h-12 rounded-full bg-[#E3F2E9] text-primary flex items-center justify-center mx-auto mb-3">
+              <Sparkles className="w-6 h-6 stroke-[2]" />
+            </div>
+            <h2 className="font-serif font-bold text-2xl text-[#191C1B]">
+              WELCOME TO FOUND
+            </h2>
+            <p className="text-xs sm:text-sm text-[#5F6762] mt-1.5 max-w-sm mx-auto leading-relaxed">
+              Let&apos;s remember what you already have. Start by adding your first pantry food or personal item.
+            </p>
+            <div className="mt-4 flex items-center justify-center gap-3">
+              <Link
+                href="/add"
+                className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-full bg-primary hover:bg-primary-hover text-white text-xs font-bold shadow-2xs transition-colors"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Add your first item</span>
+              </Link>
+            </div>
+          </section>
+        )}
+
         {/* 1. HERO SEARCH / BEFORE YOU BUY */}
         <section aria-labelledby="search-heading" className="mb-7">
           <div className="bg-white rounded-2xl border border-[#E2E5E1] p-4 sm:p-5 shadow-[0_2px_8px_rgba(0,0,0,0.04)]">
