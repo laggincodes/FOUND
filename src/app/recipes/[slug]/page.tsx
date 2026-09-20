@@ -9,7 +9,7 @@ import { useToast } from '@/components/Toast';
 import { Breadcrumbs } from '@/components/Breadcrumbs';
 import { PriorityBadge } from '@/components/PriorityBadge';
 import { Modal } from '@/components/Modal';
-import { PriorityTier, FoodCategory } from '@/types';
+import { PriorityTier, FoodCategory, Recipe } from '@/types';
 import { FOOD_LIBRARY_CATALOG } from '@/lib/food-library/food-catalog';
 import { matchFoodLibrary, normalizeFoodName } from '@/lib/food-library/normalizer';
 import { convertQuantity, parseQuantityAndUnit, normalizeUnit } from '@/lib/unitConverter';
@@ -35,7 +35,30 @@ export default function RecipeDetailPage() {
   const { items, markIngredientsUsed, getItemAssessment, addMissingIngredientsToGrocery } = usePantry();
   const { showToast } = useToast();
 
-  const recipe = RECIPES_DATA.find((r) => r.slug === slug);
+  const staticRecipe = RECIPES_DATA.find((r) => r.slug === slug);
+  const [dynamicRecipe, setDynamicRecipe] = useState<Recipe | null>(null);
+  const [isCheckingDynamic, setIsCheckingDynamic] = useState(!staticRecipe);
+
+  React.useEffect(() => {
+    if (!staticRecipe && typeof window !== 'undefined') {
+      try {
+        const cachedRaw = sessionStorage.getItem('found_gemini_recipes_cache_v1');
+        if (cachedRaw) {
+          const cached = JSON.parse(cachedRaw);
+          const found = (cached.recipes || []).find((r: Recipe) => r.slug === slug);
+          if (found) {
+            setDynamicRecipe(found);
+          }
+        }
+      } catch {
+        // ignore
+      } finally {
+        setIsCheckingDynamic(false);
+      }
+    }
+  }, [staticRecipe, slug]);
+
+  const recipe = staticRecipe || dynamicRecipe;
 
   const [isMarkingCooked, setIsMarkingCooked] = useState(false);
   const [hasCooked, setHasCooked] = useState(false);
@@ -44,6 +67,14 @@ export default function RecipeDetailPage() {
     rescuedValue: number;
     rescuedWeightKg: number;
   } | null>(null);
+
+  if (isCheckingDynamic) {
+    return (
+      <div className="min-h-screen pb-24 bg-[#FBFBFA] flex items-center justify-center">
+        <div className="text-xs text-[#5F6762]">Loading recipe...</div>
+      </div>
+    );
+  }
 
   if (!recipe) {
     notFound();
