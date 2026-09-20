@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FAF9FC;
+    --foreground: #1A1C1E;
+  }
+
+  body {
+    background-color: #FAF9FC;
+    color: #1A1C1E;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-editorial {
+    font-family: 'Newsreader', Georgia, serif;
+  }
+
+  /* Accessible focus rings aligned with Stitch primary */
+  :focus-visible {
+    outline: 2px solid #32533C;
+    outline-offset: 2px;
+  }
+}
+
+/* Restrained Stitch card borders & shadows */
+.stitch-border {
+  border: 1px solid #C2C8C0;
+}
+
+.stitch-card {
+  background-color: #FFFFFF;
+  border: 1px solid #E3E2E6;
+  border-radius: 0.5rem;
+}
